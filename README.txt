@@ -1,0 +1,11 @@
+To run testapp.py from Homeproject Dir
+
+
+    Activate VE:
+        source venv/bin/activate
+
+    install requirements:
+        pip install -r /venv/Code/requirements.txt
+
+    run:
+        python3 ./venv/Code/testapp.py
