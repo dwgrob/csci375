@@ -5,7 +5,7 @@ import os
 app = Flask(__name__)
 
 # Configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://csci375team6:3jni3edn@dolphin/csci375team6_povertycalculator'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://csci375team6:3jjjrun@dolphin/csci375team6_povertycalculator'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
