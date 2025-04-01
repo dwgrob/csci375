@@ -1,4 +1,4 @@
-To run testapp.py from Homeproject Dir
+To run testapp.py from github linked csci375 Dir
 
 
     Activate VE:
@@ -8,5 +8,5 @@ To run testapp.py from Homeproject Dir
         pip install -r /venv/Code/requirements.txt
 
     run:
-        python3 ./venv/Code/testapp.py
+        python3 ./testapp.py
 
