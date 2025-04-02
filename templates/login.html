@@ -81,27 +81,6 @@
             }
         }
 
-        // Load navigation links
-        function loadNavigation() {
-            const navContainer = document.getElementById('nav-container');
-            if (navContainer) {
-                const pages = [
-                    { name: "Income", url: "/income" },
-                    { name: "Python Retrieval", url: "/retrieval" },
-                    { name: "Blog", url: "/blog" }, 
-                    { name: "Logout", url: "/logout" },
-                ];
-
-                pages.forEach(page => {
-                    const link = document.createElement('a');
-                    link.textContent = page.name;
-                    link.href = page.url;
-                    link.classList.add('nav-link');
-                    navContainer.appendChild(link);
-                });
-            }
-        }
-
         document.addEventListener('DOMContentLoaded', loadNavigation);
     </script>
 </head>

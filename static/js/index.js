@@ -8,7 +8,8 @@ function createNavigation() {
 
     const pages = [
         { name: "Income", url: " " },
-        { name: "Blog", url: " " }, 
+        { name: "Blog", url: " " },
+        { name: "Analysis", url: " " }, 
         { name: "Logout", url: " " },
         // Add more pages as needed
     ];
