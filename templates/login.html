@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trash Panda's Calculator</title>
-    <link rel="stylesheet" href="index.css">
+    <title>Trash Panda Calculator</title>
+    <link rel="stylesheet" href="/static/styles.css">
     <style>
-        /*from*/
+        /* Form-specific styles */
         .form-container {
             margin-top: 4rem;
             display: flex;
@@ -46,6 +46,64 @@
             background: #45a049;
         }
     </style>
+    <script>
+        // Handle registration
+        async function handleRegister(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            
+            const response = await fetch('/register', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            alert(result.message);
+            if (response.ok) {
+                window.location.href = '/user';
+            }
+        }
+
+        // Handle login
+        async function handleLogin(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            
+            const response = await fetch('/login', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            alert(result.message);
+            if (response.ok) {
+                window.location.href = '/user';
+            }
+        }
+
+        // Load navigation links
+        function loadNavigation() {
+            const navContainer = document.getElementById('nav-container');
+            if (navContainer) {
+                const pages = [
+                    { name: "Income", url: "/income" },
+                    { name: "Python Retrieval", url: "/retrieval" },
+                    { name: "Blog", url: "/blog" }, 
+                    { name: "Logout", url: "/logout" },
+                ];
+
+                pages.forEach(page => {
+                    const link = document.createElement('a');
+                    link.textContent = page.name;
+                    link.href = page.url;
+                    link.classList.add('nav-link');
+                    navContainer.appendChild(link);
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadNavigation);
+    </script>
 </head>
 <body>
     <nav class="navbar">
@@ -57,7 +115,7 @@
         <!-- Register Form -->
         <div class="form-box">
             <h2>Register</h2>
-            <form action="register.php" method="POST">
+            <form onsubmit="handleRegister(event)">
                 <div class="form-group">
                     <label>First Name:</label>
                     <input type="text" name="firstName" required>
@@ -77,23 +135,21 @@
                         <option value="Advisee">Advisee</option>
                     </select>
                 </div>
-                <button type="submit" name="register">Register</button>
+                <button type="submit">Register</button>
             </form>
         </div>
         
         <!-- Login Form -->
         <div class="form-box">
             <h2>Login</h2>
-            <form action="login.php" method="POST">
+            <form onsubmit="handleLogin(event)">
                 <div class="form-group">
                     <label>First Name:</label>
                     <input type="text" name="firstName" required>
                 </div>
-                <button type="submit" name="login">Login</button>
+                <button type="submit">Login</button>
             </form>
         </div>
     </div>
-    
-    <script src="index.js"></script>
 </body>
 </html>
