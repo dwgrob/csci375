@@ -12,7 +12,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
 # Making classes to use for the analysis, for now it doesn't directly call from the database cause i dont know how
-class User:
+class Users:
     # Defining some attributes of the user, this will be changes to call the database
     def __init__(self, id, income, assets, liabilities, tags):
         self.id =  id
@@ -36,9 +36,9 @@ class User:
         print(f"Based on the tags of different income, assets and liability types you have some reccomended blogs are {self.tags}")
         # For the self.tags that can be changes with a call to the blog table in the database and return blogs with the same tags
 
-user1 = User(1, 2000, 1000, 2050, ['studentLoan', 'carLoan', 'rent', 'investments', 'partTimeJob'])
-user2 = User(2, 100, 50000, 3000, ['studentLoan', 'rent', 'investments', 'fullTimeJob'])
-user3 = User(3, 0, 10000, 1000, ['studentLoan', 'rent'])
+user1 = Users(1, 2000, 1000, 2050, ['studentLoan', 'carLoan', 'rent', 'investments', 'partTimeJob'])
+user2 = Users(2, 100, 50000, 3000, ['studentLoan', 'rent', 'investments', 'fullTimeJob'])
+user3 = Users(3, 0, 10000, 1000, ['studentLoan', 'rent'])
 
 user1.Projection()
 user2.Projection()
