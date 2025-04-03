@@ -32,8 +32,8 @@ class User:
         newMoney = moneyCurrent + netChange
 
         print(f"{self.id} your starting asset total is {self.assets}.")
-        print(f"If your income and liabilities stays the same over the next 12 months, your net change in value will be {netChange}")
-        print(f"Based on the tages of different income, assets and liability types you have some reccomended balgs are{self.tags} with your assets being worth {newMoney}")
+        print(f"If your income and liabilities stays the same over the next 12 months, your net change in value will be {netChange} with your assets being worth {newMoney}")
+        print(f"Based on the tags of different income, assets and liability types you have some reccomended blogs are {self.tags}")
         # For the self.tags that can be changes with a call to the blog table in the database and return blogs with the same tags
 
 user1 = User(1, 2000, 1000, 2050, ['studentLoan', 'carLoan', 'rent', 'investments', 'partTimeJob'])
