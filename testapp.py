@@ -33,6 +33,18 @@ class Income(db.Model):
 def home():
     return render_template('index.html')
 
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+@app.route('/blog')
+def blog():
+    return render_template('blog.html')
+
+@app.route('/analysis')
+def analysis():
+    return render_template('analysis.html')
+
 # Secure API to fetch income data using POST
 @app.route('/secure-income-data', methods=['POST'])
 def get_income_data():

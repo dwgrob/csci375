@@ -2,15 +2,13 @@
 
 // Function to create and display navigation links
 function createNavigation() {
-
     const navContainer = document.getElementById('nav-container'); // Container for the nav links
-    //const welcomeMessage = document.createElement('h1');
 
     const pages = [
-        { name: "Income", url: " " },
-        { name: "Blog", url: " " },
-        { name: "Analysis", url: " " }, 
-        { name: "Logout", url: " " },
+        { name: "Income", url: "/" },  // Home page (Income page)
+        { name: "Blog", url: "/blog" }, // Blog page
+        { name: "Analysis", url: "/analysis" }, // Analysis page
+        { name: "Logout", url: "/login" },  // Login page (assuming it logs out)
         // Add more pages as needed
     ];
 
