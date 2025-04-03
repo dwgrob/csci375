@@ -60,7 +60,7 @@
             const result = await response.json();
             alert(result.message);
             if (response.ok) {
-                window.location.href = '/user';
+                window.location.href = '/user';  // Redirect after successful registration
             }
         }
 
@@ -77,7 +77,7 @@
             const result = await response.json();
             alert(result.message);
             if (response.ok) {
-                window.location.href = '/user';
+                window.location.href = '/user';  // Redirect after successful login
             }
         }
 
@@ -96,9 +96,12 @@
             <h2>Register</h2>
             <form onsubmit="handleRegister(event)">
                 <div class="form-group">
-                    <label>First Name:</label>
-                    <input type="text" name="firstName" required>
+                    <label>Name:</label>
+                    <input type="text" name="name" required>
+                    <label>Money:</label>
+                    <input type="text" name="money" required>
                 </div>
+                <!--
                 <div class="form-group">
                     <label>Last Name:</label>
                     <input type="text" name="lastName" required>
@@ -114,6 +117,7 @@
                         <option value="Advisee">Advisee</option>
                     </select>
                 </div>
+                -->
                 <button type="submit">Register</button>
             </form>
         </div>
@@ -123,8 +127,8 @@
             <h2>Login</h2>
             <form onsubmit="handleLogin(event)">
                 <div class="form-group">
-                    <label>First Name:</label>
-                    <input type="text" name="firstName" required>
+                    <label>Name:</label>
+                    <input type="text" name="name" required>
                 </div>
                 <button type="submit">Login</button>
             </form>
