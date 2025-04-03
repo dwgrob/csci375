@@ -11,26 +11,48 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# Define Models
+# Defining Models that need to match what we have on our tables in our database
+
+#TODO: needs to match the table from poverty calculator table
 class User(db.Model):
     __tablename__ = 'users'  # Matches SQL table name
 
     id = db.Column(db.Integer, primary_key=True)
-    firstName = db.Column(db.String(100), nullable=False)  # Match "firstName" casing
-    incomes = db.relationship('Income', backref='owner', lazy=True)
+    firstName = db.Column(db.String(100), nullable=False)
+    lastName = db.Column(db.String(100), nullable=False)
+    type = db.Column(db.String(100), nullable=False)
+    contactInfo = db.Column(db.String(100), nullable=False)
 
+#TODO: set it up to just have different tables of different type of income
 class Income(db.Model):
-    __tablename__ = 'income'  # Matches SQL table name
+    __tablename__ = 'income'  
 
     id = db.Column(db.Integer, primary_key=True)
-    income = db.Column(db.Float, nullable=False)
-    liabilities = db.Column(db.Float, nullable=True)
-    obligations = db.Column(db.Float, nullable=True)
-    ownerId = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # Match "ownerId" casing
+    ownerId = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    
+    #TODO: set it up to just have a controlled variety of the type like salary, rental, etc. to clearly distinguish the table
+    type = db.Column(db.String(100), nullable=False) 
+
+#TODO: set it up to just have different tables of different types of assets
+class Assets(db.Model):
+    __tablename__ = 'assets' 
+
+    id = db.Column(db.Integer, primary_key=True)
+    ownerId = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False) 
+    type = db.Column(db.String(100), nullable=False)
+    
+#TODO: set it up to just have different tables of different type of liabilities
+class Liabilities(db.Model):
+    __tablename__ = 'liabilities' 
+
+    id = db.Column(db.Integer, primary_key=True)
+    ownerId = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False) 
+    type = db.Column(db.String(100), nullable=False)
+
 
 # Serve the HTML page
 @app.route('/')
-def home():
+def index():
     return render_template('index.html')
 
 @app.route('/login')
@@ -50,15 +72,11 @@ def analysis():
 def get_income_data():
     data = request.json
 
-    # Optional authentication check
-    if 'auth_token' not in data or data['auth_token'] != "secure_token_123":
-        return jsonify({"error": "Unauthorized access"}), 401
-
     # Query matching SQL structure
     results = db.session.query(
         Income.id.label("id"),
         User.firstName.label("firstName"),
-        Income.income.label("income"),
+        Income.ownerID.label("OwnerID"),
         Income.liabilities.label("liabilities"),
         Income.obligations.label("obligations")
     ).join(User, Income.ownerId == User.id).all()
@@ -80,8 +98,8 @@ def add_income():
     data = request.json
 
     # Validate required fields
-    if not all(k in data for k in ('firstName', 'income', 'liabilities', 'obligations')):
-        return jsonify({"error": "Missing required fields"}), 400
+    #if not all(k in data for k in ('firstName', 'income', 'liabilities', 'obligations')):
+    #    return jsonify({"error": "Missing required fields"}), 400
 
     # Check if user exists, if not create a new one
     user = User.query.filter_by(firstName=data['firstName']).first()
