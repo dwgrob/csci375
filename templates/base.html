@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    </head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Trash Panda Calculator</div>
+        <div id="nav-container" class="nav-links"></div>
+    </nav>
+    {% block content %}{% endblock %}
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+</body>
+</html>
