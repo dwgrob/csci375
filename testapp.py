@@ -1,9 +1,10 @@
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request, render_template, session, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from config import SQLALCHEMY_DATABASE_URI
 import os
 
 app = Flask(__name__)
+app.secret_key = 'Trash_Panda' 
 
 # Configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
@@ -50,17 +51,29 @@ class Liabilities(db.Model):
     ownerId = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False) 
     type = db.Column(db.String(100), nullable=False)
 
+class Blog(db.Model):
+    __tablename__ = 'blog' 
+
+    blogId = db.Column(db.Integer, primary_key=True)
+    authorId = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False) 
+    title = db.Column(db.String(100), nullable=False)
+    text = db.Column(db.String(100), nullable=False)
+    tag = db.Column(db.String(100), nullable=False)
+    author = db.relationship('User', backref='blogs')
+
 
 # Serve the HTML page
 @app.route('/')
 def index():
     return render_template('index.html')
 
+
+#===========================================================================================
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         # Handle login
-        name = request.form.get('name')  # Assume this field is used to identify the user
+        name = request.form.get('name') 
         user = User.query.filter_by(name=name).first()
         
         if user:
@@ -68,6 +81,8 @@ def login():
             return jsonify({"message": f"Welcome back, {user.name}!"}), 200
         else:
             return jsonify({"message": "Invalid credentials, please try again."}), 400
+    #session['user_id'] = User.id
+    #print(session['user_id'])
     return render_template('login.html')
 
 @app.route('/register', methods=['POST'])
@@ -99,14 +114,50 @@ def register():
 
     return jsonify({"message": "User registered successfully!"}), 201
 
-@app.route('/user')
-def user():
-    # This would be the dashboard or user page after login
-    return "User Dashboard"
+
+#=========================================================================================
+@app.route('/create-blog', methods=['POST'])
+def create_blog():
+    #user_id = session.get('user_id')
+    #if not user_id:
+        #return jsonify({"message": "User not logged in"}), 401
+
+    title = request.form.get('title')
+    tag = request.form.get('tag')
+    text = request.form.get('text')
+    user_id = request.form.get('user_id')
+
+    new_blog = Blog(title=title, tag=tag, text=text, authorId=user_id)
+    db.session.add(new_blog)
+    db.session.commit()
+
+    return jsonify({"message": "Blog created successfully"}), 201
+
 
 @app.route('/blog')
-def blog():
-    return render_template('blog.html')
+def get_blogs():
+    selected_tag = request.args.get('tag')  
+    
+    if selected_tag:
+        blogs = Blog.query.filter_by(tag=selected_tag).all()
+    else:
+        blogs = Blog.query.all()
+
+    blog_list = []
+    for blog in blogs:
+        blog_list.append({
+            "id": blog.blogId,
+            "title": blog.title,
+            "tag": blog.tag,
+            "text": blog.text,
+            "author": blog.author,
+        })
+        
+    return render_template('blog.html', posts=blog_list)
+
+#=======================================================================================
+
+
 
 @app.route('/analysis')
 def analysis():

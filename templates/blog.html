@@ -5,6 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blogs</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <script>
+    // Handle create blog submission
+    async function createBlog(event) {
+        event.preventDefault();  // Prevent the default form submission
+        
+        const formData = new FormData(event.target);  // Get form data
+
+        // Send a POST request to create the blog
+        const response = await fetch('/create-blog', {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();  // Get the JSON response
+
+        // Alert the user based on success or failure
+        alert(result.message);
+
+        // If the response is successful, redirect to the blog listing page
+        if (response.ok) {
+            window.location.href = '/blog';
+        }
+    }
+
+    // Load the navigation when the page is ready
+    document.addEventListener('DOMContentLoaded', loadNavigation);
+</script>
+
+        </script>
 </head>
 <body>
     <nav class="navbar">
@@ -18,40 +47,48 @@
         <!-- New Post Form -->
         <div class="post-form-container">
             <h2>Create New Post</h2>
-            <form method="POST">
+            <form onsubmit="createBlog(event)">
                 <div class="form-group">
                     <label for="title">Title:</label>
                     <input type="text" id="title" name="title" required>
                 </div>
-                <div class="form-group">   
-                    <label for="tag">Tag:</label>
-                    <input type="text" id="tag" name="tag" required>
+                <div class="form-group">
+                    <label for="user_id">User ID:</label>
+                    <input type="text" id="user_id" name="user_id" required>
                 </div>
+                <label for="tag">Tag:</label>
+                    <select id="tag" name="tag" required class="select-blog">
+                         <option value="poor">Poor</option>
+                         <option value="middle class">Middle Class</option>
+                         <option value="rich">Rich</option>
+                    </select>
                 
                 <div class="form-group">
-                    <label for="content">Content:</label>
-                    <textarea id="content" name="content" rows="5" required></textarea>
+                    <label for="text">Content:</label>
+                    <textarea id="content" name="text" rows="5" required></textarea>
                 </div>
                 
                 <button type="submit">Post</button>
             </form>
         </div>
-        
+        <div class="tag-filters">
+            <a href="/blog">All</a> 
+            <a href="/blog?tag=poor">Poor</a> 
+            <a href="/blog?tag=middle class">Middle Class</a> 
+            <a href="/blog?tag=rich">Rich</a>
+        </div>        
         <!-- Existing Posts -->
-        <div class="posts-container">
-            <h2>Recent Posts</h2>
-            
-            {% for post in posts %}
-            <div class="post-card">
-                <h3>{{ post.title }}</h3>
-                <small>Posted by {{ post.author }} on {{ post.date_posted.strftime('%Y-%m-%d') }}</small>
-                <p>{{ post.content }}</p>
-            </div>
-            {% else %}
-            <p>No posts yet. Be the first to write something!</p>
-            {% endfor %}
+        {% for post in posts %}
+        <div class="post-card">
+            <h3>{{ post.title }}</h3>
+            <h4>{{ post.tag }}</h4>
+            <h4>{{ post.author.name }}</h4>
+            <p>{{ post.text }}</p>
         </div>
-    </div>
+        {% else %}
+            <p>No posts yet. Be the first to write something!</p>
+        {% endfor %}
+
 
     <script src="{{ url_for('static', filename='./js/index.js') }}"></script>
 </body>
