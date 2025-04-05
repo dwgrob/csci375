@@ -10,7 +10,7 @@ class User(db.Model):
     #type = db.Column(db.String(100), nullable=False)
     #contactInfo = db.Column(db.String(100), nullable=False)
 
-class Income(db.Model):
+"""class Income(db.Model):
     __tablename__ = 'income'  
 
     id = db.Column(db.Integer, primary_key=True)
@@ -42,4 +42,4 @@ class Blog(db.Model):
     title = db.Column(db.String(100), nullable=False)
     text = db.Column(db.String(100), nullable=False)
     tag = db.Column(db.String(100), nullable=False)
-    author = db.relationship('User', backref='blogs')
+    author = db.relationship('User', backref='blogs')"""
