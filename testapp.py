@@ -26,9 +26,8 @@ class User(db.Model):
     __tablename__ = 'users'  # Matches SQL table name
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    money = db.Column(db.Integer)
-    #lastName = db.Column(db.String(100), nullable=False)
+    firstName = db.Column(db.String(100), nullable=False)
+    lastName = db.Column(db.String(100), nullable=False)
     #type = db.Column(db.String(100), nullable=False)
     #contactInfo = db.Column(db.String(100), nullable=False)
 
@@ -98,24 +97,21 @@ def login():
 @app.route('/register', methods=['POST'])
 def register():
     # Handle registration
-    name = request.form.get('name')
-    #last_name = request.form.get('lastName')
+    firstName = request.form.get('firstName')
+    lastName = request.form.get('lastName')
     #contact_info = request.form.get('contactInfo')
     #user_type = request.form.get('type')
-    money = request.form.get('money')
-
     # Check if the user already exists
-    existing_user = User.query.filter_by(name=name).first()
+    existing_user = User.query.filter_by(firstName=firstName).first()
     if existing_user:
         return jsonify({"message": "User with this contact info already exists."}), 400
 
     # Create a new user
     new_user = User(
-        name=name,
-        #lastName=last_name,
+        firstName=firstName,
+        lastName=lastName,
         #contactInfo=contact_info,
         #type=user_type
-        money=money
     )
 
     # Add the new user to the database
