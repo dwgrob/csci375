@@ -60,7 +60,7 @@
             const result = await response.json();
             alert(result.message);
             if (response.ok) {
-                window.location.href = '/user';  // Redirect after successful registration
+                window.location.href = '/';  // Redirect after successful registration
             }
         }
 
@@ -86,7 +86,6 @@
 <body>
     <nav class="navbar">
         <div class="logo">Trash Panda Calculator</div>
-        <div id="nav-container" class="nav-links"></div>
     </nav>
     
     <div class="form-container">
