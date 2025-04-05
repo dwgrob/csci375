@@ -8,24 +8,21 @@ api_bp = Blueprint("api_bp", __name__)
 @api_bp.route('/register', methods=['POST'])
 def register():
     # Handle registration
-    name = request.form.get('name')
-    #last_name = request.form.get('lastName')
+    firstName = request.form.get('firstName')
+    lastName = request.form.get('lastName')
     #contact_info = request.form.get('contactInfo')
     #user_type = request.form.get('type')
-    money = request.form.get('money')
-
     # Check if the user already exists
-    existing_user = User.query.filter_by(name=name).first()
+    existing_user = User.query.filter_by(firstName=firstName).first()
     if existing_user:
         return jsonify({"message": "User with this contact info already exists."}), 400
 
     # Create a new user
     new_user = User(
-        name=name,
-        #lastName=last_name,
+        firstName=firstName,
+        lastName=lastName,
         #contactInfo=contact_info,
         #type=user_type
-        money=money
     )
 
     # Add the new user to the database

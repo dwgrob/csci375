@@ -63,31 +63,7 @@ def analysis():
 
 
 
-@pages_bp.route('/register', methods=['POST'])
-def register():
-    # Handle registration
-    firstName = request.form.get('firstName')
-    lastName = request.form.get('lastName')
-    #contact_info = request.form.get('contactInfo')
-    #user_type = request.form.get('type')
-    # Check if the user already exists
-    existing_user = User.query.filter_by(firstName=firstName).first()
-    if existing_user:
-        return jsonify({"message": "User with this contact info already exists."}), 400
 
-    # Create a new user
-    new_user = User(
-        firstName=firstName,
-        lastName=lastName,
-        #contactInfo=contact_info,
-        #type=user_type
-    )
-
-    # Add the new user to the database
-    db.session.add(new_user)
-    db.session.commit()
-
-    return jsonify({"message": "User registered successfully!"}), 201
 
 
 
