@@ -1,12 +1,11 @@
-from app import db
+from extensions import db
 
 class User(db.Model):
     __tablename__ = 'users'  # Matches SQL table name
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    money = db.Column(db.Integer)
-    #lastName = db.Column(db.String(100), nullable=False)
+    firstName = db.Column(db.String(100), nullable=False)
+    lastName = db.Column(db.String(100), nullable=False)
     #type = db.Column(db.String(100), nullable=False)
     #contactInfo = db.Column(db.String(100), nullable=False)
 

@@ -1,11 +1,8 @@
-from flask import Flask, jsonify, request, render_template, session, redirect, url_for
-from flask_sqlalchemy import SQLAlchemy
-from flask import Blueprint, render_template
-from app import db
-from models import User, Income, Assets, Liabilities, Blog 
-import os
+from flask import Flask, jsonify, request, render_template, session, redirect, url_for, Blueprint
+from extensions import db
+from models import User
 
-api_bp = Blueprint("api", __name__, static_folder="static", template_folder="templates")
+api_bp = Blueprint("api_bp", __name__)
 
 
 @api_bp.route('/register', methods=['POST'])
