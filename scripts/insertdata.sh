@@ -4,7 +4,7 @@ chmod u+x venv.sh
 chmod u+x initdb.sh
 
 
-SQL_INSERT="$(pwd)/insert.sql"
+SQL_INSERT="scripts/insert.sql"
 echo "inserting test data from " + $SQL_INSERT
 
 # Run to create Table schema

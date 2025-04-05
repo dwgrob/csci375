@@ -16,7 +16,7 @@ EOF
 
 
 echo "are we gettting here"
-SQL_SCRIPT="$(pwd)/schema.sql"
+SQL_SCRIPT="scripts/schema.sql"
 echo $SQL_SCRIPT
 
 # Run to create Table schema
