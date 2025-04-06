@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blogs</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
     <script>
@@ -52,10 +51,13 @@
                     <label for="title">Title:</label>
                     <input type="text" id="title" name="title" required>
                 </div>
+                <!--
                 <div class="form-group">
                     <label for="user_id">User ID:</label>
                     <input type="text" id="user_id" name="user_id" required>
                 </div>
+                -->
+                <input type="hidden" id="userId" value="{{ user_id }}">
                 <label for="tag">Tag:</label>
                     <select id="tag" name="tag" required class="select-blog">
                          <option value="poor">Poor</option>

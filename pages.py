@@ -1,5 +1,7 @@
 from flask import Flask, jsonify, request, render_template, session, redirect, url_for, Blueprint
 from extensions import db
+from models import Blog, Income
+from datetime import datetime
 from models import User
 
 pages_bp = Blueprint('pages_bp', __name__)
@@ -14,16 +16,16 @@ def index():
 def login():
     if request.method == 'POST':
         # Handle login
-        name = request.form.get('name') 
-        user = User.query.filter_by(name=name).first()
+        contactInfo = request.form.get('contactInfo') 
+        user = User.query.filter_by(contactInfo=contactInfo).first()
         
         if user:
             # Successful login
             session['user_id'] = user.id
-            session['user_name'] = user.name
-            return jsonify({"message": f"Welcome back, {user.name}!"}), 200
+            session['user_name'] = user.firstName
+            return jsonify({"message": f"Welcome back, {user.firstName}!"}), 200
         else:
-            return js onify({"message": "Invalid credentials, please try again."}), 400
+            return jsonify({"message": "Invalid credentials, please try again."}), 400
 
     return render_template('login.html')
 
@@ -36,13 +38,13 @@ def register():
     user_type = request.form.get('type')
 
     # Check if the user already exists
-    existing_user = User.query.filter_by(name=name).first()
+    existing_user = User.query.filter_by(contactInfo=contact_info).first()
     if existing_user:
         return jsonify({"message": "User with this contact info already exists."}), 400
 
     # Create a new user
     new_user = User(
-        firstName=first_namename,
+        firstName=first_name,
         lastName=last_name,
         contactInfo=contact_info,
         type=user_type
@@ -69,7 +71,6 @@ def create_blog():
     title = request.form.get('title')
     tag = request.form.get('tag')
     text = request.form.get('text')
-    #user_id = request.form.get('user_id')
 
     new_blog = Blog(title=title, tag=tag, text=text, authorId=user_id)
     db.session.add(new_blog)
@@ -104,11 +105,13 @@ def get_blogs():
 def get_income_data():
     user_id = session.get('user_id')
     user_name = session.get('user_name')
+    if not user_id:
+        return jsonify({"message": "User not logged in"}), 401
 
     # Query matching SQL structure
     results = db.session.query(
         Income.id.label("id"),
-        User.name.label("user_name"),
+        User.firstName.label("user_name"),
         Income.ownerId.label("ownerID"),
         Income.income.label("income"),
         Income.salary.label("salary"),
@@ -129,7 +132,7 @@ def get_income_data():
         "rentalIncome": row.rentalIncome,
         "businessIncome": row.businessIncome,
         "investments": row.investments,
-        "otherSources": row.otherSources;
+        "otherSources": row.otherSources,
         "liabilities": row.liabilities,
         "obligations": row.obligations
     } for row in results]

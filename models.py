@@ -1,4 +1,5 @@
 from extensions import db
+from datetime import datetime
 
 #THIS ALREADY MATCHES WHAT THE SCHEMA IS AS OF 04-05
 
@@ -22,7 +23,7 @@ class Income(db.Model):
     businessIncome = db.Column(db.Integer)
     investments = db.Column(db.Integer)
     otherSources = db.Column(db.Integer)
-    liabiliies = db.Column(db.Integer)
+    liabilities = db.Column(db.Integer)
     obligations = db.Column(db.Integer)
 
 class Assets(db.Model):
@@ -32,7 +33,7 @@ class Assets(db.Model):
     ownerId = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False) 
     assetType = db.Column(db.String(50))
     assetValue = db.Column(db.Integer)
-    purchaseDate = db.Column(db.DateTime, default=datetime.utcnow)
+    purchaseDate = db.Column(db.DateTime)
 
 
 class Liabilities(db.Model):
@@ -41,8 +42,8 @@ class Liabilities(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ownerId = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False) 
     liabilityType = db.Column(db.String(50))
-    amountOwed = db.Colum(Numeric(12, 6))
-    apr = db.Colum(Numeric(2, 2))
+    amountOwed = db.Column(db.Numeric(12, 6))
+    apr = db.Column(db.Numeric(2, 2))
 
 class Blog(db.Model):
     __tablename__ = 'blog' 

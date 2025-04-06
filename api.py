@@ -4,7 +4,7 @@ from models import User
 
 api_bp = Blueprint("api_bp", __name__)
 
-
+"""
 @api_bp.route('/register', methods=['POST'])
 def register():
     # Handle registration
@@ -33,8 +33,7 @@ def register():
 
 
 
-
-"""@api_bp.route('/create-blog', methods=['POST'])
+@api_bp.route('/create-blog', methods=['POST'])
 def create_blog():
     #user_id = session.get('user_id')
     #if not user_id:
