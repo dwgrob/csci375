@@ -19,14 +19,63 @@ def login():
         
         if user:
             # Successful login
+            session['user_id'] = user.id
+            session['user_name'] = user.name
             return jsonify({"message": f"Welcome back, {user.name}!"}), 200
         else:
-            return jsonify({"message": "Invalid credentials, please try again."}), 400
-    #session['user_id'] = User.id
-    #print(session['user_id'])
+            return js onify({"message": "Invalid credentials, please try again."}), 400
+
     return render_template('login.html')
 
+@pages_bp.route('/register', methods=['POST'])
+def register():
+    # Handle registration
+    first_name = request.form.get('firstName')
+    last_name = request.form.get('lastName')
+    contact_info = request.form.get('contactInfo')
+    user_type = request.form.get('type')
 
+    # Check if the user already exists
+    existing_user = User.query.filter_by(name=name).first()
+    if existing_user:
+        return jsonify({"message": "User with this contact info already exists."}), 400
+
+    # Create a new user
+    new_user = User(
+        firstName=first_namename,
+        lastName=last_name,
+        contactInfo=contact_info,
+        type=user_type
+    )
+
+    # Add the new user to the database
+    db.session.add(new_user)
+    db.session.commit()
+
+    return jsonify({"message": "User registered successfully!"}), 201
+
+@pages_bp.route('/logoff')
+def logoff():
+    session.pop("user_id", None)
+    return redirect(url_for("login"))
+
+
+@pages_bp.route('/create-blog', methods=['POST'])
+def create_blog():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({"message": "User not logged in"}), 401
+
+    title = request.form.get('title')
+    tag = request.form.get('tag')
+    text = request.form.get('text')
+    #user_id = request.form.get('user_id')
+
+    new_blog = Blog(title=title, tag=tag, text=text, authorId=user_id)
+    db.session.add(new_blog)
+    db.session.commit()
+
+    return jsonify({"message": "Blog created successfully"}), 201
 
 
 @pages_bp.route('/blog')
@@ -50,6 +99,78 @@ def get_blogs():
         
     return render_template('blog.html', posts=blog_list)
 
+# Secure API to fetch income data using POST
+@pages_bp.route('/secure-income-data', methods=['POST'])
+def get_income_data():
+    user_id = session.get('user_id')
+    user_name = session.get('user_name')
+
+    # Query matching SQL structure
+    results = db.session.query(
+        Income.id.label("id"),
+        User.name.label("user_name"),
+        Income.ownerId.label("ownerID"),
+        Income.income.label("income"),
+        Income.salary.label("salary"),
+        Income.rentalIncome.label("rentalIncome"),
+        Income.businessIncome.label("businessIncome"),
+        Income.investments.label("investments"),
+        Income.otherSources.label("otherSources"),
+        Income.liabilities.label("liabilities"),
+        Income.obligations.label("obligations")
+    ).join(User, Income.ownerId == user_id).all()
+
+    # Convert results to JSON
+    response = [{
+        "id": row.id,
+        "firstName": row.name,  
+        "income": row.income,
+        "salary": row.salary,
+        "rentalIncome": row.rentalIncome,
+        "businessIncome": row.businessIncome,
+        "investments": row.investments,
+        "otherSources": row.otherSources;
+        "liabilities": row.liabilities,
+        "obligations": row.obligations
+    } for row in results]
+    
+    return jsonify(response)
+
+
+# API to add income data (POST)
+@pages_bp.route('/add-income', methods=['POST'])
+def add_income():
+    user_id = session.get('user_id')
+    user_name = session.get('user_name')
+    if not user_id:
+        return jsonify({"message": "User not logged in"}), 401
+
+    income = request.form.get('income')
+    salary = request.form.get('salary')
+    rentalIncome = request.form.get('rentalIncome')
+    businessIncome = request.form.get('businessIncome')
+    investments = request.form.get('investments')
+    otherSources = request.form.get('otherSources')
+    liabilities = request.form.get('liabilities')
+    obligations = request.form.get('obligations')
+    ownerId = user_id
+
+    # Create new income entry
+    new_income = Income(
+        income=income,
+        salary=salary,
+        rentalIncome=rentalIncome,
+        businessIncome=businessIncome,
+        investments=investments,
+        otherSources=otherSources,
+        liabilities=liabilities,
+        obligations=obligations,
+        ownerId=user_id 
+    )
+    db.session.add(new_income)
+    db.session.commit()
+
+    return jsonify({"message": "Income added successfully"}), 201
 
 @pages_bp.route('/analysis')
 def analysis():
