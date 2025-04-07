@@ -10,21 +10,21 @@
     <h2>Incomes</h2>
         <ul>
         {% for income in response.incomes %}
-            <li>{{ income.type }} - ${{ income.amount }} ({{ income.created }})</li>
+            <li>{{ income.type }} - ${{ income.amount }} </li>
         {% endfor %}
         </ul>
 
     <h2>Assets</h2>
         <ul>
         {% for asset in response.assets %}
-            <li>{{ asset.type }} - ${{ asset.value }} ({{ asset.purchaseDate }})</li>
+            <li>{{ asset.type }} - ${{ asset.value }}</li>
         {% endfor %}
         </ul>
 
     <h2>Liabilities</h2>
         <ul>
         {% for li in response.liabilities %}
-            <li>{{ li.type }} - ${{ li.amountOwed }} ({{ li.created }})</li>
+            <li>{{ li.type }} - ${{ li.amountOwed }}</li>
         {% endfor %}
         </ul>
 

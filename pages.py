@@ -33,7 +33,6 @@ def home():
             "id": i.id,
             "amount": i.amount,
             "type": i.incomeType,
-            "created": i.created.isoformat() if i.created else None
         } for i in incomes],
         "assets": [{
             "id": a.id,
@@ -45,7 +44,6 @@ def home():
             "id": l.id,
             "type": l.liabilityType,
             "amountOwed": l.amountOwed,
-            "created": l.created.isoformat() if l.created else None
         } for l in liabilities]
     }
     return render_template('info.html', NME=session['user_name'], response=response)
