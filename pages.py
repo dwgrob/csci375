@@ -56,15 +56,16 @@ def login():
 def advisor_login():
     if request.method == 'POST':
         # Handle login
-        contactInfo = request.form.get('contactInfo')
+        #contactInfo = request.form.get('contactInfo')
         authId = request.form.get('authId')
         # Check if the user exists
         user = Advisor.query.filter_by(authId=authId).first()
-        
+        #session['advisor_id'] = advisor.id
         if user:
             # Successful login
             session['user_id'] = user.id
             session['user_name'] = user.firstName
+            session['isAdvisor'] = True
             return jsonify({"message": f"Welcome back, {user.firstName}!"}), 200
         else:
             return jsonify({"message": "Invalid credentials, please try again."}), 400
@@ -108,7 +109,7 @@ def advisor_register():
     auth_Id = request.form.get('authId')
     # Check if the user already exists
     existing_user = Advisor.query.filter_by(authId=auth_Id).first()
-    session['user_id'] = existing_user.id
+    #session['advisor_id'] = existing_user.id
     if existing_user:
         return jsonify({"message": "User with this contact info already exists."}), 400
 
@@ -129,6 +130,7 @@ def advisor_register():
 @pages_bp.route('/logoff')
 def logoff():
     session.pop("user_id", None)
+    session.pop("user_name", None)
     return redirect(url_for("login"))
 
 
@@ -165,8 +167,8 @@ def get_blogs():
             "title": blog.title,
             "tag": blog.tag,
             "text": blog.text,
-            "author": blog.author,
-            "comment": blog.comment
+            "author": blog.author
+            #"comment": blog.comment
         })
         
     return render_template('blog.html', posts=blog_list)
@@ -174,22 +176,21 @@ def get_blogs():
 
 @pages_bp.route('/comment-blog', methods=['POST'])
 def add_comment():
-    #user_id = session.get('user_id')
-    advisor_id = session.get('existing_user.id')
+    user_id = session.get('user_id')
+    #advisor_id = session.get('advisor.id')
 
-    advisor = Advisor.query.get(advisor_id)
+    advisor = Advisor.query.get(user_id)
 
-    if not advisor:
-        return jsonify({"message": "Unauthorized"}), 403  
+    #if not advisor:
+        #return jsonify({"message": "Unauthorized"}), 403  
 
     blog_id = request.form.get('blog_id')
-    comment = request.form.get('comment')
+    text = request.form.get('text')
 
-    new_comment = Comment(blogId=blog_id, authorID=advisor_id, text=comment)
+    new_comment = Comment(blogId=blog_id, authorID=advisor.id, text=text)
     db.session.add(new_comment)
     db.session.commit() 
     return jsonify({"message": "Comment saved successfully"}), 200 
-
 
 @pages_bp.route('/add-income', methods=['POST'])
 def add_income():

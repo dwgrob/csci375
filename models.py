@@ -63,7 +63,7 @@ class Blog(db.Model):
     comments = db.relationship('Comment', backref='blog', lazy=True)
     
 class Comment(db.Model):
-    __tablename__ = 'comment'
+    __tablename__ = 'comments'
     
     commentId = db.Column(db.Integer, primary_key=True)
     blogId = db.Column(db.Integer, db.ForeignKey('blog.blogId'), nullable=False) 

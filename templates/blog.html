@@ -48,7 +48,7 @@
 
     <div class="blog-container">
         <h1>Blog</h1>
-        <p>User type: {{ session.get('user_type') }}</p>
+        <p>Username: {{ session.get('user.firstName') }}</p>
         <!-- New Post Form -->
         <div class="post-form-container">
             <h2>Create New Post</h2>
@@ -92,16 +92,17 @@
                 <p><strong>Tag:</strong> {{ post.tag }}</p>
                 <p><strong>Author:</strong> {{post.author.firstName}}</p>
                 <p>{{ post.text }}</p>
-
-                {% if post.comment %}
+		
+		<!--Currently this does not work yet-->
+                {% if post.comments %}
                 <div>
                     <p><em>Advisor Comment:</em></p>
                     <ul>
                         {% for comment in post.comments %}
                             <li>
-                                <ul>
-                                    <li>{{ comment.text }}</li>
-                                    <li>{{ comment.authorID }}</li>
+                                <div>
+                                    <p>{{ comment.text }}</p>
+                                    <p>Posted by: {{ comment.authorId }}</p>
                                 </ul>
                                 
                             </li>
@@ -110,12 +111,12 @@
                 </div>
                 {% endif %}
 
-                {% if session.get('existing_user.id') %}
+                {% if session.get('isAdvisor') %}
                 <div class="form-group">
                     <form method="POST" action="{{ url_for('pages_bp.add_comment') }}">
-                        <input type="hidden" name="blog_id" value="{{ post.blogId }}">
-                        <label for="comment">Add Comment:</label>
-                        <textarea name="comment" rows="3" cols="50"></textarea><br>
+                        <input type="hidden" name="blog_id" value="{{ post.id }}">
+                        <label for="text">Add Comment:</label>
+                        <textarea name="text" rows="3" cols="50"></textarea><br>
                         <button type="submit">Save Comment</button>
                     </form>
                 </div>
