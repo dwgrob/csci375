@@ -5,6 +5,7 @@ create table if not exists users (
     firstName varchar(20),
     lastName varchar(20),
     contactInfo varchar(20),
+    authId varchar(20),
     type varchar(10)
 );
 
