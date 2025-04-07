@@ -4,7 +4,7 @@ create table if not exists users (
     id int PRIMARY KEY AUTO_INCREMENT,
     firstName varchar(20),
     lastName varchar(20),
-    contactInfo varchar(20),
+    contactInfo varchar(20)
 );
 
 
@@ -14,7 +14,7 @@ create table if not exists advisors (
     firstName varchar(20),
     lastName varchar(20),
     contactInfo varchar(20),
-    authId varchar(20),
+    authId varchar(20)
 );
 
 

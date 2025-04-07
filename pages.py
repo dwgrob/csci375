@@ -48,7 +48,6 @@ def login():
             # Successful login
             session['user_id'] = user.id
             session['user_name'] = user.firstName
-            session['user_type'] = user.type
             return jsonify({"message": f"Welcome back, {user.firstName}!"}), 200
         else:
             return jsonify({"message": "Invalid credentials, please try again."}), 400
@@ -92,7 +91,7 @@ def register():
     new_user = User(
         firstName=first_name,
         lastName=last_name,
-        contactInfo=contact_info,
+        contactInfo=contact_info
     )
 
     # Add the new user to the database
@@ -111,12 +110,12 @@ def advisor_register():
     auth_Id = request.form.get('authId')
 
     # Check if the user already exists
-    existing_user = User.query.filter_by(contactInfo=contact_info).first()
+    existing_user = Advisor.query.filter_by(contactInfo=contact_info).first()
     if existing_user:
         return jsonify({"message": "User with this contact info already exists."}), 400
 
     # Create a new user
-    new_user = Advisor(
+    new_advisor = Advisor(
         firstName=first_name,
         lastName=last_name,
         contactInfo=contact_info,
@@ -124,7 +123,7 @@ def advisor_register():
     )
 
     # Add the new user to the database
-    db.session.add(new_user)
+    db.session.add(new_advisor)
     db.session.commit()
 
     return jsonify({"message": "Advisor registered successfully!"}), 201
@@ -156,7 +155,7 @@ def create_blog():
     return jsonify({"message": "Blog created successfully"}), 201
 
 
-@pages_bp.route('/blog')
+'''@pages_bp.route('/blog')
 def get_blogs():
     selected_tag = request.args.get('tag')  
     
@@ -177,6 +176,7 @@ def get_blogs():
         })
         
     return render_template('blog.html', posts=blog_list)
+    '''
 
 @pages_bp.route('/comment-blog', methods=['POST'])
 def add_comment():

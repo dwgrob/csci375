@@ -9,7 +9,6 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     firstName = db.Column(db.String(100), nullable=False)
     lastName = db.Column(db.String(100), nullable=False)
-    type = db.Column(db.String(100), nullable=False)
     contactInfo = db.Column(db.String(100), nullable=False)
     
     
@@ -20,7 +19,6 @@ class Advisor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     firstName = db.Column(db.String(100), nullable=False)
     lastName = db.Column(db.String(100), nullable=False)
-    type = db.Column(db.String(100), nullable=False)
     contactInfo = db.Column(db.String(100), nullable=False)
     authId = db.Column(db.String(100), nullable=False)
 
