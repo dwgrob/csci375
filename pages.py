@@ -1,18 +1,11 @@
 from flask import Flask, jsonify, request, render_template, session, redirect, url_for, Blueprint
 from extensions import db
-from models import Blog, Income
+from models import Blog, Income, Comment, Assets, Liabilities
 from datetime import datetime
 from models import User, Advisor
 from testfunction import *
 
 pages_bp = Blueprint('pages_bp', __name__)
-
-
-# redirect with variables example: 
-#           return redirect(url_for("compare", gameID=game, oppid=opponent))
-
-
-
 
 
 @pages_bp.route('/')
@@ -29,13 +22,9 @@ def home():
     return render_template('home.html', NME=session['user_name'])
 
 
-
-
 @pages_bp.route('/income')
 def income():
     return render_template('income.html')
-
-
 
 
 @pages_bp.route('/login', methods=['GET', 'POST'])
@@ -54,10 +43,7 @@ def login():
             # For brody to see that python can be called, should print id to terminal
             # surrounded by new lines
             test(user.id)
-            
-            
-            
-            
+
             return jsonify({"message": f"Welcome back, {user.firstName}!"}), 200
         else:
             return jsonify({"message": "Invalid credentials, please try again."}), 400
@@ -70,8 +56,10 @@ def login():
 def advisor_login():
     if request.method == 'POST':
         # Handle login
-        contactInfo = request.form.get('contactInfo') 
-        user = Advisor.query.filter_by(contactInfo=contactInfo).first()
+        contactInfo = request.form.get('contactInfo')
+        authId = request.form.get('authId')
+        # Check if the user exists
+        user = Advisor.query.filter_by(authId=authId).first()
         
         if user:
             # Successful login
@@ -84,7 +72,7 @@ def advisor_login():
     return render_template('advisor-login.html')
 
 
-
+#For advisee
 @pages_bp.route('/register', methods=['POST'])
 def register():
     # Handle registration
@@ -118,9 +106,9 @@ def advisor_register():
     last_name = request.form.get('lastName')
     contact_info = request.form.get('contactInfo')
     auth_Id = request.form.get('authId')
-
     # Check if the user already exists
-    existing_user = Advisor.query.filter_by(contactInfo=contact_info).first()
+    existing_user = Advisor.query.filter_by(authId=auth_Id).first()
+    session['user_id'] = existing_user.id
     if existing_user:
         return jsonify({"message": "User with this contact info already exists."}), 400
 
@@ -137,10 +125,6 @@ def advisor_register():
     db.session.commit()
 
     return jsonify({"message": "Advisor registered successfully!"}), 201
-
-
-
-
 
 @pages_bp.route('/logoff')
 def logoff():
@@ -188,99 +172,122 @@ def get_blogs():
     return render_template('blog.html', posts=blog_list)
 
 
-
-
-
 @pages_bp.route('/comment-blog', methods=['POST'])
 def add_comment():
-    user_id = session.get('user_id')
-    user = User.query.get(user_id)
-    if not user or user.type != 'Adviser':
+    #user_id = session.get('user_id')
+    advisor_id = session.get('existing_user.id')
+
+    advisor = Advisor.query.get(advisor_id)
+
+    if not advisor:
         return jsonify({"message": "Unauthorized"}), 403  
 
     blog_id = request.form.get('blog_id')
     comment = request.form.get('comment')
 
-    blog = Blog.query.get(blog_id)
-    blog.comment = comment
+    new_comment = Comment(blogId=blog_id, authorID=advisor_id, text=comment)
+    db.session.add(new_comment)
     db.session.commit() 
     return jsonify({"message": "Comment saved successfully"}), 200 
 
 
-# Secure API to fetch income data using POST
-@pages_bp.route('/secure-income-data', methods=['POST'])
-def get_income_data():
-    user_id = session.get('user_id')
-    user_name = session.get('user_name')
-    if not user_id:
-        return jsonify({"message": "User not logged in"}), 401
-
-    # Query matching SQL structure
-    results = db.session.query(
-        Income.id.label("id"),
-        User.firstName.label("user_name"),
-        Income.ownerId.label("ownerID"),
-        Income.income.label("income"),
-        Income.salary.label("salary"),
-        Income.rentalIncome.label("rentalIncome"),
-        Income.businessIncome.label("businessIncome"),
-        Income.investments.label("investments"),
-        Income.otherSources.label("otherSources"),
-        Income.liabilities.label("liabilities"),
-        Income.obligations.label("obligations")
-    ).join(User, Income.ownerId == user_id).all()
-
-    # Convert results to JSON
-    response = [{
-        "id": row.id,
-        "firstName": row.name,  
-        "income": row.income,
-        "salary": row.salary,
-        "rentalIncome": row.rentalIncome,
-        "businessIncome": row.businessIncome,
-        "investments": row.investments,
-        "otherSources": row.otherSources,
-        "liabilities": row.liabilities,
-        "obligations": row.obligations
-    } for row in results]
-    
-    return jsonify(response)
-
-
-# API to add income data (POST)
 @pages_bp.route('/add-income', methods=['POST'])
 def add_income():
     user_id = session.get('user_id')
-    user_name = session.get('user_name')
     if not user_id:
         return jsonify({"message": "User not logged in"}), 401
 
-    income = request.form.get('income')
-    salary = request.form.get('salary')
-    rentalIncome = request.form.get('rentalIncome')
-    businessIncome = request.form.get('businessIncome')
-    investments = request.form.get('investments')
-    otherSources = request.form.get('otherSources')
-    liabilities = request.form.get('liabilities')
-    obligations = request.form.get('obligations')
-    ownerId = user_id
+    amount = request.form.get('amount')
+    income_type = request.form.get('incomeType')
 
-    # Create new income entry
     new_income = Income(
-        income=income,
-        salary=salary,
-        rentalIncome=rentalIncome,
-        businessIncome=businessIncome,
-        investments=investments,
-        otherSources=otherSources,
-        liabilities=liabilities,
-        obligations=obligations,
-        ownerId=user_id 
+        ownerId=user_id,
+        amount=amount,
+        incomeType=income_type
     )
+    
     db.session.add(new_income)
     db.session.commit()
 
     return jsonify({"message": "Income added successfully"}), 201
+
+@pages_bp.route('/add-asset', methods=['POST'])
+def add_asset():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({"message": "User not logged in"}), 401
+
+    asset_type = request.form.get('assetType')
+    asset_value = request.form.get('assetValue')
+    purchase_date = request.form.get('purchaseDate')
+
+    new_asset = Assets(
+        ownerId=user_id,
+        assetType=asset_type,
+        assetValue=asset_value,
+        purchaseDate=datetime.strptime(purchase_date, '%Y-%m-%d') if purchase_date else None
+    )
+    
+    db.session.add(new_asset)
+    db.session.commit()
+
+    return jsonify({"message": "Asset added successfully"}), 201
+
+#liability
+@pages_bp.route('/add-liability', methods=['POST'])
+def add_liability():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({"message": "User not logged in"}), 401
+
+    liability_type = request.form.get('liabilityType')
+    amount_owed = request.form.get('amountOwed')
+
+    new_liability = Liabilities(
+        ownerId=user_id,
+        liabilityType=liability_type,
+        amountOwed=amount_owed
+    )
+    
+    db.session.add(new_liability)
+    db.session.commit()
+
+    return jsonify({"message": "Liability added successfully"}), 201
+
+@pages_bp.route('/get-financial-data', methods=['GET'])
+def get_financial_data():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({"message": "User not logged in"}), 401
+
+    # Get all data for the user
+    incomes = Income.query.filter_by(ownerId=user_id).all()
+    assets = Assets.query.filter_by(ownerId=user_id).all()
+    liabilities = Liabilities.query.filter_by(ownerId=user_id).all()
+
+    response = {
+        "incomes": [{
+            "id": i.id,
+            "amount": i.amount,
+            "type": i.incomeType,
+            "created": i.created.isoformat() if i.created else None
+        } for i in incomes],
+        "assets": [{
+            "id": a.id,
+            "type": a.assetType,
+            "value": a.assetValue,
+            "purchaseDate": a.purchaseDate.isoformat() if a.purchaseDate else None
+        } for a in assets],
+        "liabilities": [{
+            "id": l.id,
+            "type": l.liabilityType,
+            "amountOwed": l.amountOwed,
+            "created": l.created.isoformat() if l.created else None
+        } for l in liabilities]
+    }
+    
+    return jsonify(response)
+
 
 @pages_bp.route('/analysis')
 def analysis():

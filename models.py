@@ -60,12 +60,13 @@ class Blog(db.Model):
     tag = db.Column(db.String(100), nullable=False)
     author = db.relationship('User', backref='blogs')
     
+    comments = db.relationship('Comment', backref='blog', lazy=True)
     
 class Comment(db.Model):
     __tablename__ = 'comment'
     
     commentId = db.Column(db.Integer, primary_key=True)
-    blogId = db.Column(db.Integer, db.ForeignKey('blogs.blogId'), nullable=False) 
+    blogId = db.Column(db.Integer, db.ForeignKey('blog.blogId'), nullable=False) 
     authorID = db.Column(db.Integer, db.ForeignKey('advisors.id'), nullable=False) 
     text = db.Column(db.String(500), nullable=False)
 

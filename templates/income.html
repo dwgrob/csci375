@@ -6,30 +6,49 @@
     <title>Secure Income Data</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css')}}">
     <script>
-        //This will work right now
         async function submitIncome(event) {
-            event.preventDefault();  // Prevent the default form submission
-            
-            const formData = new FormData(event.target);  // Get form data
+            event.preventDefault();
+            await submitForm(event.target, '/add-income', 'income-records');
+        }
+    
+        async function submitAsset(event) {
+            event.preventDefault();
+            await submitForm(event.target, '/add-asset', 'asset-records');
+        }
+    
+        async function submitLiability(event) {
+            event.preventDefault();
+            await submitForm(event.target, '/add-liability', 'liability-records');
+        }
 
-            // Send a POST request to create the blog
-            const response = await fetch('/add-income', {
+        async function submitForm(form, endpoint, recordsDiv) {
+            const formData = new FormData(form);
+            
+            const response = await fetch(endpoint, {
                 method: 'POST',
                 body: formData
             });
-
-            const result = await response.json();  // Get the JSON response
-
-            // Alert the user based on success or failure
+                
+            const result = await response.json();
             alert(result.message);
-
-            // If the response is successful, redirect to the blog listing page
+                
             if (response.ok) {
-                window.location.href = '/';
+                form.reset();
+                loadAllData(); // Refresh the data display
             }
         }
-
-        window.onload = fetchIncomeData;
+    
+        // Load all financial data
+        async function loadAllData() {
+            const response = await fetch('/get-financial-data');
+            const data = await response.json();
+                
+            if (response.ok) {
+                document.getElementById('income-records').textContent = JSON.stringify(data.incomes, null, 2);
+                document.getElementById('asset-records').textContent = JSON.stringify(data.assets, null, 2);
+                document.getElementById('liability-records').textContent = JSON.stringify(data.liabilities, null, 2);
+            }
+        }
     </script>
     <style>
         .form-container {
@@ -54,65 +73,91 @@
         <div id="nav-container" class="nav-links"></div>
     </nav>
     
-    <div class ="form-container">
+    <div class="form-container">
         <div class="form-section">
-    <h1>Secure Income Data</h1>
-
-    <h2>Add New Income</h2>
-    <form onsubmit="submitIncome(event)">
-        <input type="hidden" id="userId" value="{{ user_name }}">
-
-        <label for="income">Income:</label>
-        <input type="number" id="income" name="income" required><br>
-
-        <label for="rentalIncome">Rental Income:</label>
-        <input type="number" id="rentalIncome" name="rentalIncome" required><br>
-
-        <label for="businessIncome">Business Income:</label>
-        <input type="number" id="businessIncome" name="businessIncome" required><br>
-
-        <label for="investments">Investments:</label>
-        <input type="number" id="investments" name="investments" required><br>
-
-        <label for="otherSources">Others:</label>
-        <input type="number" id="otherSources" name="otherSources" required><br>
-
-        <label for="liabilities">Liabilities:</label>
-        <input type="number" id="liabilities" name="liabilities" required><br>
-
-        <label for="obligations">Obligations:</label>
-        <input type="number" id="obligations" name="obligations"required><br>
-
-        <button type="submit">Submit</button>
-    </form>
-
-    <h2>Income Records</h2>
-    {% if posts %}
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Tag</th>
-                    <th>Author</th>
-                    <th>Text</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for post in posts %}
-                    <tr>
-                        <td>{{ post.title }}</td>
-                        <td>{{ post.tag }}</td>
-                        <td>{{ post.author.name }}</td>
-                        <td>{{ post.text }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>No past records yet.</p>
-    {% endif %}
-</div>
-</div>
+            <h1>Financial Information</h1>
+            <h2>Add New Income</h2>
+            <form onsubmit="submitIncome(event)">
+                <input type="hidden" id="userId" value="{{ user_name }}">
+                <label for="amount">Amount:</label>
+                <input type="number" id="amount" name="amount" required><br>
+                
+                <label for="incomeType">Income Type:</label>
+                <select id="incomeType" name="incomeType" required class="select-type">
+                    <option value="salary">Salary</option>
+                    <option value="rentalIncome">Rental Income</option>
+                    <option value="businessIncome">Business Income</option>
+                    <option value="investments">Investments</option>
+                    <option value="otherSources">Other Sources</option>
+                </select><br> 
+                <button type="submit">Submit</button>
+            </form>
+            <h2>Add New Asset</h2>
+            <form onsubmit="submitAsset(event)">
+                <input type="hidden" id="assetUserId" value="{{ user_name }}">
+                
+                <label for="assetType">Asset Type:</label>
+                <select id="assetType" name="assetType" required class="select-type">
+                    <option value="realEstate">Real Estate</option>
+                    <option value="vehicle">Vehicle</option>
+                    <option value="stocks">Stocks</option>
+                    <option value="savings">Savings</option>
+                    <option value="other">Other</option>
+                </select><br>
+                
+                <label for="assetValue">Value ($):</label>
+                <input type="number" id="assetValue" name="assetValue" required><br>
+                
+                <label for="purchaseDate">Purchase Date:</label>
+                <input type="date" id="purchaseDate" name="purchaseDate"><br>
+                
+                <button type="submit">Submit</button>
+            </form>
+            <h2>Add New Liability</h2>
+            <form onsubmit="submitLiability(event)">
+                <input type="hidden" id="liabilityUserId" value="{{ user_name }}">
+                
+                <label for="liabilityType">Liability Type:</label>
+                <select id="liabilityType" name="liabilityType" required class="select-type">
+                    <option value="mortgage">Mortgage</option>
+                    <option value="carLoan">Car Loan</option>
+                    <option value="studentLoan">Student Loan</option>
+                    <option value="creditCard">Credit Card</option>
+                    <option value="personalLoan">Personal Loan</option>
+                </select><br>
+                
+                <label for="amountOwed">Amount Owed ($):</label>
+                <input type="number" id="amountOwed" name="amountOwed" required><br>
+                
+                <button type="submit">Submit</button>
+            </form>
+            <!--
+            <h2>Income Records</h2>
+            {% if posts %}
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>Amount</th>
+                            <th>Type</th>
+                            <th>User</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for post in posts %}
+                        <tr>
+                            <td>{{ post.amount }}</td>
+                            <td>{{ post.incomeType }}</td>
+                            <td>{{ post.user_name }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No past records yet.</p>
+            {% endif %}
+        </div>
+        -->
+    </div>
     <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 </body>
 </html>
