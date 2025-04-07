@@ -29,15 +29,9 @@ class Income(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     ownerId = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    income = db.Column(db.Integer)
-    salary = db.Column(db.Integer)
-    rentalIncome = db.Column(db.Integer)
-    businessIncome = db.Column(db.Integer)
-    investments = db.Column(db.Integer)
-    otherSources = db.Column(db.Integer)
-    liabilities = db.Column(db.Integer)
-    obligations = db.Column(db.Integer)
-
+    amount = db.Column(db.Integer, nullable=False)
+    incomeType = db.Column(db.String(20), nullable=False)
+    
 class Assets(db.Model):
     __tablename__ = 'assets' 
 
@@ -53,9 +47,8 @@ class Liabilities(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     ownerId = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False) 
-    liabilityType = db.Column(db.String(50))
-    amountOwed = db.Column(db.Numeric(12, 6))
-    apr = db.Column(db.Numeric(2, 2))
+    liabilityType = db.Column(db.String(50), nullable=False)
+    amountOwed = db.Column(db.Integer, nullable=False)
 
 class Blog(db.Model):
     __tablename__ = 'blog' 
@@ -63,7 +56,18 @@ class Blog(db.Model):
     blogId = db.Column(db.Integer, primary_key=True)
     authorId = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False) 
     title = db.Column(db.String(100), nullable=False)
-    text = db.Column(db.String(100), nullable=False)
+    text = db.Column(db.String(500), nullable=False)
     tag = db.Column(db.String(100), nullable=False)
     author = db.relationship('User', backref='blogs')
-    comment = db.Column(db.String(255)) 
+    
+    
+class Comment(db.Model):
+    __tablename__ = 'comment'
+    
+    commentId = db.Column(db.Integer, primary_key=True)
+    blogId = db.Column(db.Integer, db.ForeignKey('blogs.blogId'), nullable=False) 
+    authorID = db.Column(db.Integer, db.ForeignKey('advisors.id'), nullable=False) 
+    text = db.Column(db.String(500), nullable=False)
+
+
+    
