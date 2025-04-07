@@ -16,9 +16,10 @@ pages_bp = Blueprint('pages_bp', __name__)
 
 @pages_bp.route('/')
 def index():
+    #if the user is already logged in, redirecyt to the home page
     if 'user_name' in session.keys():
-        return redirect(url_for("home", NME=session['user_name']))
-    else: 
+        return redirect(url_for("pages_bp.home", NME=session['user_name']))
+    else: # otherwise redirect back to the login page
         return redirect(url_for('pages_bp.login'))
 
 
