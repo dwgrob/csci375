@@ -7,9 +7,24 @@ from models import User
 pages_bp = Blueprint('pages_bp', __name__)
 
 
+# redirect with variables example: 
+#           return redirect(url_for("compare", gameID=game, oppid=opponent))
+
+
+
+
+
 @pages_bp.route('/')
 def index():
-    return render_template('index.html')
+    if session['user_name']:
+        return redirect(url_for("home", NME=session['user_name']))
+    else: 
+        return redirect(url_for("login"))
+
+
+@pages_bp.route('/home')
+def home():
+    return render_template('home.html', NME=session['user_name'])
 
 
 @pages_bp.route('/login', methods=['GET', 'POST'])
