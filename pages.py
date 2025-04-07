@@ -28,6 +28,15 @@ def home():
     return render_template('home.html', NME=session['user_name'])
 
 
+
+
+@pages_bp.route('/income')
+def income():
+    return render_template('income.html')
+
+
+
+
 @pages_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':

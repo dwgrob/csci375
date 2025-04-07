@@ -5,7 +5,8 @@ function createNavigation() {
     const navContainer = document.getElementById('nav-container'); // Container for the nav links
 
     const pages = [
-        { name: "Income", url: "/" },  // Home page (Income page)
+        { name: "Home", url: "/home"},
+        { name: "Income", url: "/income" },  // Home page (Income page)
         { name: "Blog", url: "/blog" }, // Blog page
         { name: "Analysis", url: "/analysis" }, // Analysis page
         { name: "Logout", url: "/login" },
