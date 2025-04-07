@@ -61,7 +61,7 @@ def advisor_login():
     if request.method == 'POST':
         # Handle login
         contactInfo = request.form.get('contactInfo') 
-        user = User.query.filter_by(contactInfo=contactInfo).first()
+        user = Advisor.query.filter_by(contactInfo=contactInfo).first()
         
         if user:
             # Successful login
