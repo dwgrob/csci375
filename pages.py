@@ -38,7 +38,7 @@ def login():
             # Successful login
             session['user_id'] = user.id
             session['user_name'] = user.firstName
-            
+            session['isAdvisor'] = False
             
             # For brody to see that python can be called, should print id to terminal
             # surrounded by new lines
@@ -131,6 +131,7 @@ def advisor_register():
 def logoff():
     session.pop("user_id", None)
     session.pop("user_name", None)
+    session.pop("isAdvisor", None)
     return redirect(url_for("login"))
 
 
@@ -153,12 +154,16 @@ def create_blog():
 
 @pages_bp.route('/blog')
 def get_blogs():
-    selected_tag = request.args.get('tag')  
-    
+    selected_tag = request.args.get('tag')
+
     if selected_tag:
-        blogs = Blog.query.filter_by(tag=selected_tag).all()
+        blogs = Blog.query.filter_by(tag=selected_tag).options(
+            db.joinedload(Blog.comments), db.joinedload(Blog.author)
+        ).all()
     else:
-        blogs = Blog.query.all()
+        blogs = Blog.query.options(
+            db.joinedload(Blog.comments), db.joinedload(Blog.author)
+        ).all()
 
     blog_list = []
     for blog in blogs:
@@ -167,10 +172,10 @@ def get_blogs():
             "title": blog.title,
             "tag": blog.tag,
             "text": blog.text,
-            "author": blog.author
-            #"comment": blog.comment
+            "author": blog.author,
+            "comments": blog.comments 
         })
-        
+
     return render_template('blog.html', posts=blog_list)
 
 
@@ -190,7 +195,9 @@ def add_comment():
     new_comment = Comment(blogId=blog_id, authorID=advisor.id, text=text)
     db.session.add(new_comment)
     db.session.commit() 
-    return jsonify({"message": "Comment saved successfully"}), 200 
+
+    blog_list = Blog.query.all()
+    return render_template('blog.html', posts=blog_list)
 
 @pages_bp.route('/add-income', methods=['POST'])
 def add_income():
@@ -234,7 +241,6 @@ def add_asset():
 
     return jsonify({"message": "Asset added successfully"}), 201
 
-#liability
 @pages_bp.route('/add-liability', methods=['POST'])
 def add_liability():
     user_id = session.get('user_id')

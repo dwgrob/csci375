@@ -60,7 +60,13 @@ class Blog(db.Model):
     tag = db.Column(db.String(100), nullable=False)
     author = db.relationship('User', backref='blogs')
     
-    comments = db.relationship('Comment', backref='blog', lazy=True)
+    comments = db.relationship(
+        'Comment',
+        backref='blog',
+        lazy=True,
+        primaryjoin="Blog.blogId == Comment.blogId"
+    )
+
     
 class Comment(db.Model):
     __tablename__ = 'comments'

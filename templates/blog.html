@@ -48,7 +48,7 @@
 
     <div class="blog-container">
         <h1>Blog</h1>
-        <p>Username: {{ session.get('user.firstName') }}</p>
+        <p>Username: {{ session.get('user_name') }}</p>
         <!-- New Post Form -->
         <div class="post-form-container">
             <h2>Create New Post</h2>
@@ -96,16 +96,10 @@
 		<!--Currently this does not work yet-->
                 {% if post.comments %}
                 <div>
-                    <p><em>Advisor Comment:</em></p>
+                    <h4>Advisor Comments:</h4>
                     <ul>
                         {% for comment in post.comments %}
-                            <li>
-                                <div>
-                                    <p>{{ comment.text }}</p>
-                                    <p>Posted by: {{ comment.authorId }}</p>
-                                </ul>
-                                
-                            </li>
+                            <li>{{ comment.text }} (By advisor ID: {{ comment.authorID }})</li>
                         {% endfor %}
                     </ul>
                 </div>
