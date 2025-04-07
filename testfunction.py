@@ -17,7 +17,14 @@ def test(user_id):
     conn = mysql.connector.connect(**DB_CONFIG)
     cursor = conn.cursor(dictionary=True)
 
-    # Fetch data
+    # get rid of old analysis
+    dele = '''
+        delete from analysis;
+    '''
+    #cursor.execute(dele, (user_id,))
+    cursor.execute(dele)
+    conn.commit()
+
     sql = '''
     insert into analysis(ownerId, totalIncome, totalAssets, totalLiabilities)
 

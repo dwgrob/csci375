@@ -14,7 +14,12 @@ VALUES (1, 1, 65000, 'Salary'),
 
 INSERT INTO assets(id, ownerId, assetType, assetValue, purchaseDate) VALUES 
 (1,1 ,'House', '21000', '2013-01-01'),
-(2,1 ,'Food Truck', '5000', '2013-01-01');
+(2,1 ,'Food Truck', '5000', '2013-01-01'),
+(3,2 ,'Real Estate', '4500', '2013-01-01'),
+(4,2 ,'Real Estate', '4600', '2013-01-01')
+
+;
+
 
 
 INSERT INTO liabilities(id, ownerId, liabilityType, amountOwed) VALUES
