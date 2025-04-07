@@ -77,4 +77,14 @@ class Comment(db.Model):
     text = db.Column(db.String(500), nullable=False)
 
 
+
+class Analysis(db.Model):
+    __tablename__ = 'analysis'
+    
+    ownerId = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, primary_key=True) 
+    totalIncome = db.Column(db.Integer, nullable=False)
+    totalAssets = db.Column(db.Integer, nullable=False)
+    totalLiabilities = db.Column(db.Integer, nullable=False)
+
+
     

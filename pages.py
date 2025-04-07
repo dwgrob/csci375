@@ -2,8 +2,8 @@ from flask import Flask, jsonify, request, render_template, session, redirect, u
 from extensions import db
 from models import Blog, Income, Comment, Assets, Liabilities
 from datetime import datetime
-from models import User, Advisor
-from testfunction import *
+from models import User, Advisor, Analysis
+from analyzer import analyze
 
 pages_bp = Blueprint('pages_bp', __name__)
 
@@ -22,12 +22,16 @@ def home():
     user_id = session.get('user_id')
     if not user_id:
         return jsonify({"message": "User not logged in"}), 401
+    
+    analyze(user_id)
 
     # Get all data for the user
     incomes = Income.query.filter_by(ownerId=user_id).all()
     assets = Assets.query.filter_by(ownerId=user_id).all()
     liabilities = Liabilities.query.filter_by(ownerId=user_id).all()
+    analysis = Analysis.query.filter_by(ownerId=user_id).first()
 
+    
     response = {
         "incomes": [{
             "id": i.id,
@@ -46,7 +50,14 @@ def home():
             "amountOwed": l.amountOwed,
         } for l in liabilities]
     }
-    return render_template('info.html', NME=session['user_name'], response=response)
+    
+    A = {
+        'totalIncome': analysis.totalIncome,
+        'totalAssets': analysis.totalAssets,
+        'totalLiabilities': analysis.totalLiabilities
+    }
+    
+    return render_template('info.html', NME=session['user_name'], response=response, A=A)
 
 
 @pages_bp.route('/income')
@@ -67,9 +78,6 @@ def login():
             session['user_name'] = user.firstName
             session['isAdvisor'] = False
             
-            # For brody to see that python can be called, should print id to terminal
-            # surrounded by new lines
-            test(user.id)
 
             return jsonify({"message": f"Welcome back, {user.firstName}!"}), 200
         else:

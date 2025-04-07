@@ -11,7 +11,7 @@ DB_CONFIG = {
     "database": "csci375team6_povCal"
 }
 
-def test(user_id):
+def analyze(user_id):
 
     # Connect to database
     conn = mysql.connector.connect(**DB_CONFIG)
@@ -47,6 +47,3 @@ def test(user_id):
 
     cursor.close()
     conn.close()
-
-
-    
