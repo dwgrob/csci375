@@ -19,7 +19,36 @@ def index():
 
 @pages_bp.route('/home')
 def home():
-    return render_template('home.html', NME=session['user_name'])
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({"message": "User not logged in"}), 401
+
+    # Get all data for the user
+    incomes = Income.query.filter_by(ownerId=user_id).all()
+    assets = Assets.query.filter_by(ownerId=user_id).all()
+    liabilities = Liabilities.query.filter_by(ownerId=user_id).all()
+
+    response = {
+        "incomes": [{
+            "id": i.id,
+            "amount": i.amount,
+            "type": i.incomeType,
+            "created": i.created.isoformat() if i.created else None
+        } for i in incomes],
+        "assets": [{
+            "id": a.id,
+            "type": a.assetType,
+            "value": a.assetValue,
+            "purchaseDate": a.purchaseDate.isoformat() if a.purchaseDate else None
+        } for a in assets],
+        "liabilities": [{
+            "id": l.id,
+            "type": l.liabilityType,
+            "amountOwed": l.amountOwed,
+            "created": l.created.isoformat() if l.created else None
+        } for l in liabilities]
+    }
+    return render_template('info.html', NME=session['user_name'], response=response)
 
 
 @pages_bp.route('/income')
@@ -262,6 +291,8 @@ def add_liability():
     return jsonify({"message": "Liability added successfully"}), 201
 
 @pages_bp.route('/get-financial-data', methods=['GET'])
+
+
 def get_financial_data():
     user_id = session.get('user_id')
     if not user_id:

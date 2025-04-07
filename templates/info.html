@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+<body>
+
+    <h1>Welcome, {{ NME }}</h1>
+
+    
+    <h2>Incomes</h2>
+        <ul>
+        {% for income in response.incomes %}
+            <li>{{ income.type }} - ${{ income.amount }} ({{ income.created }})</li>
+        {% endfor %}
+        </ul>
+
+    <h2>Assets</h2>
+        <ul>
+        {% for asset in response.assets %}
+            <li>{{ asset.type }} - ${{ asset.value }} ({{ asset.purchaseDate }})</li>
+        {% endfor %}
+        </ul>
+
+    <h2>Liabilities</h2>
+        <ul>
+        {% for li in response.liabilities %}
+            <li>{{ li.type }} - ${{ li.amountOwed }} ({{ li.created }})</li>
+        {% endfor %}
+        </ul>
+
+
+</body>
+
+{% endblock %}
