@@ -8,7 +8,7 @@ function createNavigation() {
         { name: "Income", url: "/" },  // Home page (Income page)
         { name: "Blog", url: "/blog" }, // Blog page
         { name: "Analysis", url: "/analysis" }, // Analysis page
-        { name: "Login", url: "/login" },
+        { name: "Logout", url: "/login" },
         // Add more pages as needed
     ];
 
