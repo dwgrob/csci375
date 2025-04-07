@@ -12,7 +12,9 @@
         {% for income in response.incomes %}
             <li>{{ income.type }} - ${{ income.amount }} </li>
         {% endfor %}
+        {% if A.totalIncome %}
         <p>Total Income = ${{ A.totalIncome }}</p>
+        {% endif %}
         </ul>
 
     <h2>Assets</h2>Income
@@ -21,7 +23,9 @@
             <li>{{ asset.type }} - ${{ asset.value }}</li>
 
         {% endfor %}
+        {% if A.totalAssets %}
         <p>Total Assets = ${{ A.totalAssets }}</p>
+        {% endif %}
         </ul>
 
     <h2>Liabilities</h2>
@@ -29,7 +33,9 @@
         {% for li in response.liabilities %}
             <li>{{ li.type }} - ${{ li.amountOwed }}</li>
         {% endfor %}
+        {% if A.totalLiabilities %}
         <p>Total Liabilities = ${{ A.totalLiabilities }}</p>
+        {% endif %}
         </ul>
 
 

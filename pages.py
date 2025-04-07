@@ -12,7 +12,7 @@ pages_bp = Blueprint('pages_bp', __name__)
 def index():
     #if the user is already logged in, redirecyt to the home page
     if 'user_name' in session.keys():
-        return redirect(url_for("pages_bp.home", NME=session['user_name']))
+        return redirect(url_for("pages_bp.home",))
     else: # otherwise redirect back to the login page
         return redirect(url_for('pages_bp.login'))
 
@@ -51,12 +51,18 @@ def home():
         } for l in liabilities]
     }
     
-    A = {
-        'totalIncome': analysis.totalIncome,
-        'totalAssets': analysis.totalAssets,
-        'totalLiabilities': analysis.totalLiabilities
-    }
-    
+    A = dict()
+
+    if analysis.totalIncome:
+        A.update({'totalIncome':analysis.totalIncome})
+        
+    if analysis.totalAssets:
+        A.update({'totalAssets':analysis.totalAssets})
+        
+    if analysis.totalLiabilities:
+        A.update({'totalLiabilities':analysis.totalLiabilities})
+        
+        
     return render_template('info.html', NME=session['user_name'], response=response, A=A)
 
 
