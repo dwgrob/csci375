@@ -53,15 +53,15 @@ def home():
     
     A = dict()
 
-    if analysis:
-        if 'totalIncome' in analysis.keys():
-            A.update({'totalIncome':analysis.totalIncome})
+    for a in analysis:
+        if 'totalIncome' in a.keys():
+            A.update({'totalIncome':a.totalIncome})
             
-        #if analysis.totalAssets:
-         #   A.update({'totalAssets':analysis.totalAssets})
+        if analysis.totalAssets:
+            A.update({'totalAssets':a.totalAssets})
             
-       # if analysis.totalLiabilities:
-          #  A.update({'totalLiabilities':analysis.totalLiabilities})
+        if analysis.totalLiabilities:
+            A.update({'totalLiabilities':a.totalLiabilities})
         
         
     return render_template('info.html', NME=session['user_name'], response=response, A=A)
