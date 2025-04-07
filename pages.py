@@ -3,6 +3,7 @@ from extensions import db
 from models import Blog, Income
 from datetime import datetime
 from models import User, Advisor
+from testfunction import *
 
 pages_bp = Blueprint('pages_bp', __name__)
 
@@ -48,6 +49,15 @@ def login():
             # Successful login
             session['user_id'] = user.id
             session['user_name'] = user.firstName
+            
+            
+            # For brody to see that python can be called, should print id to terminal
+            # surrounded by new lines
+            test(user.id)
+            
+            
+            
+            
             return jsonify({"message": f"Welcome back, {user.firstName}!"}), 200
         else:
             return jsonify({"message": "Invalid credentials, please try again."}), 400
@@ -155,7 +165,7 @@ def create_blog():
     return jsonify({"message": "Blog created successfully"}), 201
 
 
-'''@pages_bp.route('/blog')
+@pages_bp.route('/blog')
 def get_blogs():
     selected_tag = request.args.get('tag')  
     
@@ -176,7 +186,10 @@ def get_blogs():
         })
         
     return render_template('blog.html', posts=blog_list)
-    '''
+
+
+
+
 
 @pages_bp.route('/comment-blog', methods=['POST'])
 def add_comment():
