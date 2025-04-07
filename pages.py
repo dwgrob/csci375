@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request, render_template, session, redirect, u
 from extensions import db
 from models import Blog, Income
 from datetime import datetime
-from models import User
+from models import User, Advisor
 
 pages_bp = Blueprint('pages_bp', __name__)
 
@@ -55,13 +55,33 @@ def login():
 
     return render_template('login.html')
 
+
+
+@pages_bp.route('/advisor-login', methods=['GET', 'POST'])
+def advisor_login():
+    if request.method == 'POST':
+        # Handle login
+        contactInfo = request.form.get('contactInfo') 
+        user = User.query.filter_by(contactInfo=contactInfo).first()
+        
+        if user:
+            # Successful login
+            session['user_id'] = user.id
+            session['user_name'] = user.firstName
+            return jsonify({"message": f"Welcome back, {user.firstName}!"}), 200
+        else:
+            return jsonify({"message": "Invalid credentials, please try again."}), 400
+
+    return render_template('advisor-login.html')
+
+
+
 @pages_bp.route('/register', methods=['POST'])
 def register():
     # Handle registration
     first_name = request.form.get('firstName')
     last_name = request.form.get('lastName')
     contact_info = request.form.get('contactInfo')
-    user_type = request.form.get('type')
 
     # Check if the user already exists
     existing_user = User.query.filter_by(contactInfo=contact_info).first()
@@ -73,7 +93,6 @@ def register():
         firstName=first_name,
         lastName=last_name,
         contactInfo=contact_info,
-        type=user_type
     )
 
     # Add the new user to the database
@@ -81,6 +100,38 @@ def register():
     db.session.commit()
 
     return jsonify({"message": "User registered successfully!"}), 201
+
+
+@pages_bp.route('/advisor-register', methods=['POST'])
+def advisor_register():
+    # Handle registration
+    first_name = request.form.get('firstName')
+    last_name = request.form.get('lastName')
+    contact_info = request.form.get('contactInfo')
+    auth_Id = request.form.get('authId')
+
+    # Check if the user already exists
+    existing_user = User.query.filter_by(contactInfo=contact_info).first()
+    if existing_user:
+        return jsonify({"message": "User with this contact info already exists."}), 400
+
+    # Create a new user
+    new_user = Advisor(
+        firstName=first_name,
+        lastName=last_name,
+        contactInfo=contact_info,
+        authId=auth_Id
+    )
+
+    # Add the new user to the database
+    db.session.add(new_user)
+    db.session.commit()
+
+    return jsonify({"message": "Advisor registered successfully!"}), 201
+
+
+
+
 
 @pages_bp.route('/logoff')
 def logoff():

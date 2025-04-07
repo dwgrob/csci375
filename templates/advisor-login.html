@@ -52,7 +52,7 @@
             event.preventDefault();
             const formData = new FormData(event.target);
             
-            const response = await fetch('/register', {
+            const response = await fetch('/advisor_register', {
                 method: 'POST',
                 body: formData
             });
@@ -69,7 +69,7 @@
             event.preventDefault();
             const formData = new FormData(event.target);
             
-            const response = await fetch('/login', {
+            const response = await fetch('/advisor_login', {
                 method: 'POST',
                 body: formData
             });
@@ -91,7 +91,7 @@
     <div class="form-container">
         <!-- Register Form -->
         <div class="form-box">
-            <h2>Register</h2>
+            <h2>Advisor Register</h2>
             <form onsubmit="handleRegister(event)">
                 <div class="form-group">
                     <label>First Name:</label>
@@ -105,10 +105,15 @@
                     <label>Email/Phone:</label>
                     <input type="text" name="contactInfo" required>
                 </div>
+                <div class="form-group">
+                    <label>Auth Id:</label>
+                    <input type="text" name="authId" required>
+                </div>
                 <button type="submit">Register</button>
             </form>
-            <a href="{{ url_for('pages_bp.advisor_login') }}">
-                <button class="login-button">Advisor Login</button>            </a>
+            <a href="{{ url_for('pages_bp.login') }}">
+                <button class="login-button">User Login</button>            </a>
+        </div>
         </div>
         
         <!-- Login Form -->

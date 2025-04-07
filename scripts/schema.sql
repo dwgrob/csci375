@@ -5,9 +5,19 @@ create table if not exists users (
     firstName varchar(20),
     lastName varchar(20),
     contactInfo varchar(20),
-    authId varchar(20),
-    type varchar(10)
 );
+
+
+
+create table if not exists advisors (
+    id int PRIMARY KEY AUTO_INCREMENT,
+    firstName varchar(20),
+    lastName varchar(20),
+    contactInfo varchar(20),
+    authId varchar(20),
+);
+
+
 
 create table if not exists income (
     id int PRIMARY KEY AUTO_INCREMENT,
