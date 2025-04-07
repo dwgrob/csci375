@@ -16,10 +16,10 @@ pages_bp = Blueprint('pages_bp', __name__)
 
 @pages_bp.route('/')
 def index():
-    if session['user_name']:
+    if 'user_name' in session.keys():
         return redirect(url_for("home", NME=session['user_name']))
     else: 
-        return redirect(url_for("login"))
+        return redirect(url_for('pages_bp.login'))
 
 
 @pages_bp.route('/home')
