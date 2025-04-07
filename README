@@ -8,5 +8,14 @@ To run testapp.py from github linked csci375 Dir
         pip install -r requirements.txt
 
     run:
-        python3 ./testapp.py
+        python3 ./app.py
+
+
+
+IF YOU HAVEA ISSUES
+
+    1. delete venv folder from device
+    2. navigate to csci375 folder
+    3. run python3 -m venv venv
+    4. repeat first set of instructions
 
