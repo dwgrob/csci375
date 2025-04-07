@@ -54,3 +54,4 @@ class Blog(db.Model):
     text = db.Column(db.String(100), nullable=False)
     tag = db.Column(db.String(100), nullable=False)
     author = db.relationship('User', backref='blogs')
+    comment = db.Column(db.String(255)) 

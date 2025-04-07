@@ -38,6 +38,7 @@ def login():
             # Successful login
             session['user_id'] = user.id
             session['user_name'] = user.firstName
+            session['user_type'] = user.type
             return jsonify({"message": f"Welcome back, {user.firstName}!"}), 200
         else:
             return jsonify({"message": "Invalid credentials, please try again."}), 400
@@ -111,9 +112,26 @@ def get_blogs():
             "tag": blog.tag,
             "text": blog.text,
             "author": blog.author,
+            "comment": blog.comment
         })
         
     return render_template('blog.html', posts=blog_list)
+
+@pages_bp.route('/comment-blog', methods=['POST'])
+def add_comment():
+    user_id = session.get('user_id')
+    user = User.query.get(user_id)
+    if not user or user.type != 'Adviser':
+        return jsonify({"message": "Unauthorized"}), 403  
+
+    blog_id = request.form.get('blog_id')
+    comment = request.form.get('comment')
+
+    blog = Blog.query.get(blog_id)
+    blog.comment = comment
+    db.session.commit() 
+    return jsonify({"message": "Comment saved successfully"}), 200 
+
 
 # Secure API to fetch income data using POST
 @pages_bp.route('/secure-income-data', methods=['POST'])

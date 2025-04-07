@@ -27,9 +27,20 @@
             window.location.href = '/blog';
         }
     }
+    async function addComment(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const response = await fetch('/comment-blog', {
+            method: 'POST',
+            body: formData
+        });
+        const result = await response.json();
+        alert(result.message);
+        if (response.ok) {
+            window.location.href = '/blog';
+        }
+    }
 
-    // Load the navigation when the page is ready
-    document.addEventListener('DOMContentLoaded', loadNavigation);
 </script>
 
         </script>
@@ -42,7 +53,7 @@
 
     <div class="blog-container">
         <h1>Blog</h1>
-        
+        <p>User type: {{ session.get('user_type') }}</p>
         <!-- New Post Form -->
         <div class="post-form-container">
             <h2>Create New Post</h2>
@@ -81,14 +92,27 @@
         </div>        
         <!-- Existing Posts -->
         {% for post in posts %}
-        <div class="post-card">
-            <h3>{{ post.title }}</h3>
-            <h4>{{ post.tag }}</h4>
-            <h4>{{ post.author.name }}</h4>
-            <p>{{ post.text }}</p>
-        </div>
+            <div class="post-form-container">
+                <h3>{{ post.title }}</h3>
+                <p><strong>Tag:</strong> {{ post.tag }}</p>
+                <p><strong>Author:</strong> {{post.author.firstName}}</p>
+                <p>{{ post.text }}</p>
+                {% if post.comment %}
+                <p><em>Advisor Comment:</em> {{ post.comment }}</p>
+                {% endif %}
+                {% if session.get('user_type') == 'Adviser' %}
+                <div class="form-group">
+                <form method="POST" onsubmit="addComment(event)">
+                    <input type="hidden" name="blog_id" value="{{ post.id }}">
+                    <label for="comment">Add Comment:</label>
+                    <textarea name="comment" rows="3" cols="50">{{ post.comment or '' }}</textarea><br>
+                    <button type="submit">Save Comment</button>
+                </form>
+                {% endif %}
+                </div>
+            </div>
         {% else %}
-            <p>No posts yet. Be the first to write something!</p>
+            <p>No blog posts found.</p>
         {% endfor %}
 
 
