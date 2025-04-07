@@ -49,7 +49,7 @@ create table if not exists liabilities (
 );
 
 
-create table if not exists blogs (
+create table if not exists blog (
     blogId int PRIMARY KEY AUTO_INCREMENT,
     authorId INT,
     title varchar(100),
