@@ -3,7 +3,8 @@
     <head>
         <title>{% block title %}{% endblock %}</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
-    </head>
+    {% block head %}{% endblock %}
+</head>
 <body>
     <nav class="navbar">
         <div class="logo">Trash Panda Calculator</div>

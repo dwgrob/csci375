@@ -1,3 +1,82 @@
 {% extends "base.html" %}
-{% block title %}home{% endblock %}
-{% block content %} <p>{{NME}}</p>{% endblock %}
+{% block title %}Home{% endblock %}
+{% block head %}
+<script>
+// Financial Data Handling
+async function fetchFinancialData() {
+    try {
+        const response = await fetch('/get-financial-data');
+        const data = await response.json();
+        
+        if (response.ok) {
+            displayRecords(data.incomes, 'income-records', 'Income');
+            displayRecords(data.assets, 'asset-records', 'Assets');
+            displayRecords(data.liabilities, 'liability-records', 'Liabilities');
+        }
+    } catch (error) {
+        console.error('Error fetching financial data:', error);
+    }
+}
+
+function displayRecords(records, containerId, title) {
+    const container = document.getElementById(containerId);
+    
+    if (!records || records.length === 0) {
+        container.innerHTML = `<p>No ${title.toLowerCase()} records found.</p>`;
+        return;
+    }
+
+    let tableHtml = `
+        <table border="1">
+            <thead><tr>
+                ${Object.keys(records[0]).map(key => 
+                    `<th>${key.charAt(0).toUpperCase() + key.slice(1)}</th>`
+                ).join('')}
+            </tr></thead>
+            <tbody>
+                ${records.map(record => `
+                    <tr>
+                        ${Object.values(record).map(value => 
+                            `<td>${value || '-'}</td>`
+                        ).join('')}
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>`;
+    
+    container.innerHTML = tableHtml;
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('income-records')) {
+        fetchFinancialData();
+    }
+});
+</script>
+ 
+{% endblock %}
+{% block content %}
+    <h1>Welcome, {{ NME }}</h1>
+    <h4><strong>Account Number: </strong> {{ USID }} </h4>
+    
+    <div>
+        <!-- Income Section -->
+        <div>
+            <h2>Income Records</h2>
+            <div id="income-records"></div>
+        </div>
+
+        <!-- Assets Section -->
+        <div>
+            <h2>Asset Records</h2>
+            <div id="asset-records"></div>
+        </div>
+
+        <!-- Liabilities Section -->
+        <div>
+            <h2>Liability Records</h2>
+            <div id="liability-records"></div>
+        </div>
+    </div>
+{% endblock %}
