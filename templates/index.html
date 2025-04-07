@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Income Data</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css')}}">
+    <script>
+        // Securely fetch income data using POST
+        async function fetchIncomeData() {
+            const response = await fetch('/secure-income-data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    auth_token: "secure_token_123" // Secure token for authentication
+                })
+            });
+
+            const data = await response.json();
+            
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+
+            let tableBody = document.getElementById("incomeTableBody");
+            tableBody.innerHTML = ""; // Clear previous data
+
+            data.forEach(row => {
+                let tr = document.createElement("tr");
+                tr.innerHTML = `<td>${row.id}</td>
+                                <td>${row.first_name}</td>
+                                <td>${row.income}</td>
+                                <td>${row.liabilities}</td>
+                                <td>${row.obligations}</td>`;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        // Submit new income data
+        async function submitIncome(event) {
+            event.preventDefault(); // Prevent page reload
+
+            const firstName = document.getElementById("firstName").value;
+            const income = document.getElementById("income").value;
+            const liabilities = document.getElementById("liabilities").value;
+            const obligations = document.getElementById("obligations").value;
+
+            const response = await fetch('/add-income', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    first_name: firstName,
+                    income: parseFloat(income),
+                    liabilities: parseFloat(liabilities),
+                    obligations: parseFloat(obligations)
+                })
+            });
+
+            const result = await response.json();
+            alert(result.message);
+            fetchIncomeData(); // Refresh data
+        }
+
+        window.onload = fetchIncomeData;
+    </script>
+    <style>
+        .form-container {
+            max-width: 1200px;
+            margin: 80px auto;
+            padding: 20px;
+        }
+        .form-section {
+            background: white;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    
+    <nav class="navbar">
+        <div class="logo">Trash Panda Calculator</div>
+        <div id="nav-container" class="nav-links"></div>
+    </nav>
+    
+    <div class ="form-container">
+        <div class="form-section">
+    <h1>Secure Income Data</h1>
+
+    <h2>Add New Income</h2>
+    <form onsubmit="submitIncome(event)">
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" required><br>
+
+        <label for="income">Income:</label>
+        <input type="number" id="income" required><br>
+
+        <label for="liabilities">Liabilities:</label>
+        <input type="number" id="liabilities" required><br>
+
+        <label for="obligations">Obligations:</label>
+        <input type="number" id="obligations" required><br>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <h2>Income Records</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Income</th>
+                <th>Liabilities</th>
+                <th>Obligations</th>
+            </tr>
+        </thead>
+        <tbody id="incomeTableBody"></tbody>
+    </table>
+</div>
+</div>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+</body>
+</html>

@@ -30,4 +30,6 @@ select * from income;
 
 EOF
 
+./scripts/insertdata.sh
+
 echo "if were here we should be good"

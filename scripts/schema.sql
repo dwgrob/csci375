@@ -66,6 +66,14 @@ create table if not exists  comments (
     authorId int,
     FOREIGN KEY (authorId) REFERENCES advisors(id) ON DELETE CASCADE, 
     text varchar(500)
-)
+);
+
+create table if not exists analysis(
+    ownerId int primary key,
+    totalIncome int, 
+    totalAssets int,
+    totalLiabilities int,
+    FOREIGN KEY (ownerId) REFERENCES users(id) ON DELETE CASCADE
+);
 
 
