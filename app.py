@@ -3,7 +3,6 @@ from config import SQLALCHEMY_DATABASE_URI
 from extensions import db
 from datetime import datetime
 from pages import pages_bp
-from api import api_bp
 
 
 
@@ -20,7 +19,6 @@ def create_app():
     
     
     app.register_blueprint(pages_bp)
-    #app.register_blueprint(api_bp)
     
     return app
 
