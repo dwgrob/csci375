@@ -12,7 +12,12 @@ pages_bp = Blueprint('pages_bp', __name__)
 def index():
     #if the user is already logged in, redirecyt to the home page
     if 'user_name' in session.keys():
-        return redirect(url_for("pages_bp.home",))
+        if session['isAdvisor']:
+            return redirect(url_for("pages_bp.get_blogs",))
+        else:
+            return redirect(url_for("pages_bp.home",))
+
+    
     else: # otherwise redirect back to the login page
         return redirect(url_for('pages_bp.login'))
 
