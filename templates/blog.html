@@ -99,7 +99,7 @@
                     <h4>Advisor Comments:</h4>
                     <ul>
                         {% for comment in post.comments %}
-                            <li>{{ comment.text }} (By advisor ID: {{ comment.authorID }})</li>
+                            <li>{{ comment.text }} (By <strong>{{ comment.advisor.firstName }} {{ comment.advisor.lastName }})</strong></li>
                         {% endfor %}
                     </ul>
                 </div>

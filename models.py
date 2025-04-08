@@ -76,6 +76,8 @@ class Comment(db.Model):
     authorID = db.Column(db.Integer, db.ForeignKey('advisors.id'), nullable=False) 
     text = db.Column(db.String(500), nullable=False)
 
+    advisor = db.relationship('Advisor', backref='comments')
+
 
 
 class Analysis(db.Model):

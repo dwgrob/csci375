@@ -83,6 +83,7 @@ def login():
             # Successful login
             session['user_id'] = user.id
             session['user_name'] = user.firstName
+            session['user_last'] = user.lastName
             session['isAdvisor'] = False
             
 
@@ -107,6 +108,7 @@ def advisor_login():
             # Successful login
             session['user_id'] = user.id
             session['user_name'] = user.firstName
+            session['user_last'] = user.lastName
             session['isAdvisor'] = True
             return jsonify({"message": f"Welcome back, {user.firstName}!"}), 200
         else:
@@ -238,8 +240,19 @@ def add_comment():
     db.session.add(new_comment)
     db.session.commit() 
 
-    blog_list = Blog.query.all()
+    blogs = Blog.query.options( db.joinedload(Blog.comments), db.joinedload(Blog.author)).all()
+    blog_list = []
+    for blog in blogs:
+        blog_list.append({
+            "id": blog.blogId,
+            "title": blog.title,
+            "tag": blog.tag,
+            "text": blog.text,
+            "author": blog.author,
+            "comments": blog.comments
+        })
     return render_template('blog.html', posts=blog_list)
+
 
 @pages_bp.route('/add-income', methods=['POST'])
 def add_income():
