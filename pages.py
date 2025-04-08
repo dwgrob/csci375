@@ -245,7 +245,7 @@ def add_comment():
     db.session.add(new_comment)
     db.session.commit()
 
-    blogs = Blog.query.options( db.joinedload(Blog.comments), db.joinedload(Blog.author)).a    
+    blogs = Blog.query.options( db.joinedload(Blog.comments), db.joinedload(Blog.author))   
     blog_list = []
     for blog in blogs:
         blog_list.append({
