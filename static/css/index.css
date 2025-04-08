@@ -158,3 +158,32 @@ button[type="submit"]:hover {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 
 }
+
+.analysis-container {
+    max-width: 1200px;
+    margin: 80px auto;
+    padding: 20px;
+}
+
+.placeholder-section {
+    background: white;
+    border-radius: 8px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.placeholder-section{
+    color: #333;
+    margin-top: 0;
+}
+
+.placeholder-text{
+    color: #666;
+    font-size: 1.1em;
+}
+
+ul {
+    list-style-type:none;
+}

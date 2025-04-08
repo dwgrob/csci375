@@ -1,82 +1,116 @@
-{% extends "base.html" %}
-{% block title %}Home{% endblock %}
-{% block head %}
-<script>
-// Financial Data Handling
-async function fetchFinancialData() {
-    try {
-        const response = await fetch('/get-financial-data');
-        const data = await response.json();
-        
-        if (response.ok) {
-            displayRecords(data.incomes, 'income-records', 'Income');
-            displayRecords(data.assets, 'asset-records', 'Assets');
-            displayRecords(data.liabilities, 'liability-records', 'Liabilities');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <style>
+        .analysis-container {
+            max-width: 1200px;
+            margin: 80px auto;
+            padding: 20px;
         }
-    } catch (error) {
-        console.error('Error fetching financial data:', error);
-    }
-}
-
-function displayRecords(records, containerId, title) {
-    const container = document.getElementById(containerId);
-    
-    if (!records || records.length === 0) {
-        container.innerHTML = `<p>No ${title.toLowerCase()} records found.</p>`;
-        return;
-    }
-
-    let tableHtml = `
-        <table border="1">
-            <thead><tr>
-                ${Object.keys(records[0]).map(key => 
-                    `<th>${key.charAt(0).toUpperCase() + key.slice(1)}</th>`
-                ).join('')}
-            </tr></thead>
-            <tbody>
-                ${records.map(record => `
-                    <tr>
-                        ${Object.values(record).map(value => 
-                            `<td>${value || '-'}</td>`
-                        ).join('')}
-                    </tr>
-                `).join('')}
-            </tbody>
-        </table>`;
-    
-    container.innerHTML = tableHtml;
-}
-
-// Initialize when page loads
-document.addEventListener('DOMContentLoaded', () => {
-    if (document.getElementById('income-records')) {
-        fetchFinancialData();
-    }
-});
-</script>
- 
-{% endblock %}
-{% block content %}
-    <h1>Welcome, {{ NME }}</h1>
-    <h4><strong>Account Number: </strong> {{ USID }} </h4>
-    
-    <div>
-        <!-- Income Section -->
+        
+        .placeholder-section {
+            background: white;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .placeholder-section h2 {
+            color: #333;
+            margin-top: 0;
+        }
+        
+        .placeholder-text {
+            color: #666;
+            font-size: 1.1em;
+        }
+    </style>
+    <script>
+        // Financial Data Handling
+            async function fetchFinancialData() {
+                try {
+                    const response = await fetch('/get-financial-data');
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        displayRecords(data.incomes, 'income-records', 'Income');
+                        displayRecords(data.assets, 'asset-records', 'Assets');
+                        displayRecords(data.liabilities, 'liability-records', 'Liabilities');
+                    }
+                } catch (error) {
+                    console.error('Error fetching financial data:', error);
+                }
+            }
+        
+            function displayRecords(records, containerId, title) {
+                const container = document.getElementById(containerId);
+                
+                if (!records || records.length === 0) {
+                    container.innerHTML = `<p>No ${title.toLowerCase()} records found.</p>`;
+                    return;
+                }
+        
+                let tableHtml = `
+                    <table border="1">
+                        <thead><tr>
+                            ${Object.keys(records[0]).map(key => 
+                                `<th>${key.charAt(0).toUpperCase() + key.slice(1)}</th>`
+                            ).join('')}
+                        </tr></thead>
+                        <tbody>
+                            ${records.map(record => `
+                                <tr>
+                                    ${Object.values(record).map(value => 
+                                        `<td>${value || '-'}</td>`
+                                    ).join('')}
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>`;
+                
+                container.innerHTML = tableHtml;
+            }
+        
+            // Initialize when page loads
+            document.addEventListener('DOMContentLoaded', () => {
+                if (document.getElementById('income-records')) {
+                    fetchFinancialData();
+                }
+            });
+        </script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Trash Panda Calculator</div>
+        <div id="nav-container" class="nav-links"></div>
+    </nav>
+    <div class="analysis-container">
+    <div class="placeholder-section">
+        <h1>Welcome, {{ NME }}</h1>
+        <h4><strong>Account Number: </strong> {{ USID }} </h4>
+        
         <div>
-            <h2>Income Records</h2>
-            <div id="income-records"></div>
-        </div>
+            <!-- Income Section -->
+            <div>
+                <h2>Income Records</h2>
+                <div id="income-records"></div>
+            </div>
 
-        <!-- Assets Section -->
-        <div>
-            <h2>Asset Records</h2>
-            <div id="asset-records"></div>
-        </div>
+            <!-- Assets Section -->
+            <div>
+                <h2>Asset Records</h2>
+                <div id="asset-records" class="placeholder-text"></div>
+            </div>
 
-        <!-- Liabilities Section -->
-        <div>
-            <h2>Liability Records</h2>
-            <div id="liability-records"></div>
-        </div>
+            <!-- Liabilities Section -->
+            <div>
+                <h2>Liability Records</h2>
+                <div id="liability-records" class="placeholder-text"></div>
+            </div>
     </div>
-{% endblock %}

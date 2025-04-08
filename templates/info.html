@@ -3,7 +3,8 @@
 {% block content %}
 
 <body>
-
+    <div class="analysis-container">
+        <div class="placeholder-section">
     <h1>Welcome, {{ NME }}</h1>
 
     
@@ -18,7 +19,7 @@
         </ul>
 
     <h2>Assets</h2>
-        <ul>
+        <ul style="list-style-type:none;">
         {% for asset in response.assets %}
             <li>{{ asset.type }} - ${{ asset.value }}</li>
 
@@ -37,7 +38,8 @@
         <p>Total Liabilities = ${{ A.totalLiabilities }}</p>
         {% endif %}
         </ul>
-
+    </div>
+</div>
 
 </body>
 
