@@ -1,8 +1,7 @@
 #!/bin/bash
 
 
-chmod u+x venv.sh
-chmod u+x insertdata.sh
+
 
 
 # this guy is going to completely delete the db
@@ -16,7 +15,7 @@ EOF
 
 
 echo "are we gettting here"
-SQL_SCRIPT="scripts/schema.sql"
+SQL_SCRIPT="schema.sql"
 echo $SQL_SCRIPT
 
 # Run to create Table schema
@@ -30,6 +29,6 @@ select * from income;
 
 EOF
 
-./scripts/insertdata.sh
+./insertdata.sh
 
 echo "if were here we should be good"

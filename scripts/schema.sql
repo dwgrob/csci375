@@ -6,7 +6,7 @@ create table if not exists users (
     lastName varchar(20),
     contactInfo varchar(20)
 );
-
+ 
 
 
 create table if not exists advisors (
@@ -26,8 +26,6 @@ create table if not exists income (
     amount int,
     incomeType varchar(20),
     FOREIGN KEY (ownerId) REFERENCES users(id) on DELETE cascade
-    
-
 );
 
 
@@ -48,7 +46,7 @@ create table if not exists liabilities (
     amountOwed int
 );
 
-
+ 
 create table if not exists blog (
     blogId int PRIMARY KEY AUTO_INCREMENT,
     authorId INT,
@@ -62,7 +60,7 @@ create table if not exists blog (
 create table if not exists  comments (
     commentId int PRIMARY KEY AUTO_INCREMENT,
     blogId int,
-    FOREIGN KEY (blogId) REFERENCES blogs(blogId) ON DELETE CASCADE,
+    FOREIGN KEY (blogId) REFERENCES blog(blogId) ON DELETE CASCADE,
     authorId int,
     FOREIGN KEY (authorId) REFERENCES advisors(id) ON DELETE CASCADE, 
     text varchar(500)
