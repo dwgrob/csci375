@@ -236,16 +236,26 @@ def add_comment():
     advisor = Advisor.query.get(user_id)
 
     #if not advisor:
-        #return jsonify({"message": "Unauthorized"}), 403  
+        #return jsonify({"message": "Unauthorized"}), 403
 
     blog_id = request.form.get('blog_id')
     text = request.form.get('text')
 
     new_comment = Comment(blogId=blog_id, authorID=advisor.id, text=text)
     db.session.add(new_comment)
-    db.session.commit() 
+    db.session.commit()
 
-    blog_list = Blog.query.all()
+    blogs = Blog.query.options( db.joinedload(Blog.comments), db.joinedload(Blog.author)).a    
+    blog_list = []
+    for blog in blogs:
+        blog_list.append({
+            "id": blog.blogId,
+            "title": blog.title,
+            "tag": blog.tag,
+            "text": blog.text,
+            "author": blog.author,
+            "comments": blog.comments
+        })
     return render_template('advisor-blog.html', posts=blog_list)
 
 @pages_bp.route('/add-income', methods=['POST'])
