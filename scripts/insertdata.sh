@@ -4,7 +4,7 @@ chmod u+x venv.sh
 chmod u+x initdb.sh
 
 
-SQL_INSERT="scripts/insert.sql"
+SQL_INSERT="insert.sql"
 echo "inserting test data from " + $SQL_INSERT
 
 # Run to create Table schema
@@ -18,7 +18,9 @@ select count(*) as 'income rows' from income;
 select count(*) as 'users rows 'from users;
 select count(*) as 'asset rows 'from assets;
 select count(*) as 'liability rows' from liabilities;
-select count(*) as 'blog rows 'from blogs;
+select count(*) as 'blog rows 'from blog;
+select count(*) as 'Advisor rows' from advisors;
+select count(*) as 'comment rows' from comments;
 
 
 
