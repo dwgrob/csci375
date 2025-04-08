@@ -217,8 +217,10 @@ def get_blogs():
             "author": blog.author,
             "comments": blog.comments 
         })
-
-    return render_template('blog.html', posts=blog_list)
+    if session['isAdvisor']:
+        return render_template('advisor-blog.html', posts=blog_list)
+    else:
+        return render_template('user-blog.html', posts=blog_list)
 
 
 @pages_bp.route('/comment-blog', methods=['POST'])
@@ -239,7 +241,7 @@ def add_comment():
     db.session.commit() 
 
     blog_list = Blog.query.all()
-    return render_template('blog.html', posts=blog_list)
+    return render_template('advisor-blog.html', posts=blog_list)
 
 @pages_bp.route('/add-income', methods=['POST'])
 def add_income():
